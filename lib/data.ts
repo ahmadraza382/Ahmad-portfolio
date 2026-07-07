@@ -79,13 +79,13 @@ export const SERVICES: Service[] = [
     no: "04",
     icon: "⌘",
     title: "SaaS Products",
-    desc: "Have an idea people would pay monthly for? I build the whole product: accounts, payments, subscriptions, your admin area. Did exactly this with LinkShort.",
+    desc: "Have an idea people would pay monthly for? I build the whole product: accounts, payments, subscriptions, your admin area. WordRig and LinkShort were built exactly this way.",
   },
   {
     no: "05",
     icon: "✦",
     title: "E-commerce & Shopify",
-    desc: "Online stores that make buying easy — custom builds or Shopify setups, with payments, shipping and inventory sorted.",
+    desc: "Online stores that make buying easy — custom builds or Shopify setups, with payments, shipping and inventory sorted. Dentistry99, which I build for, serves 12,000+ professionals.",
   },
   {
     no: "06",
@@ -122,6 +122,38 @@ export const SKILLS: string[] = [
   "Docker",
   "Spring Boot",
   "React Native",
+];
+
+// Grouped tech stack — shown on the About page ("Full toolkit").
+export const SKILL_GROUPS: { title: string; items: string[] }[] = [
+  {
+    title: "Frontend",
+    items: [
+      "React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS",
+      "HTML5", "CSS3", "React Native", "Redux", "Zustand", "Zod",
+      "shadcn/ui", "TanStack",
+    ],
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "Express.js", "REST APIs", "JWT", "NestJS", "Java", "Spring Boot", "Python"],
+  },
+  {
+    title: "Desktop Apps",
+    items: ["Electron", "Tauri"],
+  },
+  {
+    title: "Database",
+    items: ["MongoDB", "PostgreSQL", "Supabase", "Firebase", "MariaDB", "Redis"],
+  },
+  {
+    title: "ORM",
+    items: ["Prisma", "Mongoose"],
+  },
+  {
+    title: "Tools & Other",
+    items: ["Git", "GitHub", "Docker", "Vercel", "WordPress", "Makerkit", "Prompt Engineering", "DSA"],
+  },
 ];
 
 // Add REAL client quotes here (name + role + permission).
@@ -168,13 +200,18 @@ export const TIMELINE: TimelineEntry[] = [
     desc: "Started as an intern, stayed on as a junior developer. Built responsive pages and reusable components for a live real-estate platform.",
   },
   {
+    year: "2023—24",
+    role: "MERN Stack Diploma · SMIT",
+    desc: "Where it really started. A one-year web and mobile development course at Saylani Mass IT Training, alongside my degree — learned the MERN stack by building real projects, and knew this was what I wanted to do.",
+  },
+  {
     year: "2022—26",
     role: "BS Computer Science · GCU Faisalabad",
-    desc: "CGPA 3.5/4.0, plus a one-year MERN diploma at SMIT. My final-year project, a college management system, now runs in production at a government college. Also taught DSA at iCodeGuru and competed in hackathons (Harvard CS50x, UC Berkeley Calico, lablab.ai).",
+    desc: "CGPA 3.5/4.0. My final-year project, a college management system, now runs in production at a government college. Also taught DSA at iCodeGuru and competed in hackathons (Harvard CS50x, UC Berkeley Calico, lablab.ai).",
   },
 ];
 
-export const FILTERS: string[] = ["All", "Online Products", "Business Systems", "Online Stores"];
+export const FILTERS: string[] = ["All", "Websites", "Web Apps", "SaaS", "E-commerce", "WordPress", "AI"];
 
 export const PROJECTS: Project[] = [
   {
@@ -183,7 +220,7 @@ export const PROJECTS: Project[] = [
     mark: "◆",
     shot: "dashboard",
     category: "Online Product",
-    filter: "Online Products",
+    filter: "SaaS",
     featured: true,
     bg: "var(--sand)",
     title: "LinkShort",
@@ -224,7 +261,7 @@ export const PROJECTS: Project[] = [
     mark: "❖",
     shot: "app",
     category: "Management System · Live",
-    filter: "Business Systems",
+    filter: "Web Apps",
     featured: true,
     bg: "var(--soft)",
     title: "College Management System",
@@ -257,7 +294,7 @@ export const PROJECTS: Project[] = [
     mark: "✦",
     shot: "store",
     category: "Online Store",
-    filter: "Online Stores",
+    filter: "E-commerce",
     featured: true,
     bg: "var(--sand)",
     title: "Beat2K Studio",
@@ -289,7 +326,7 @@ export const PROJECTS: Project[] = [
     mark: "◍",
     shot: "app",
     category: "AI Product",
-    filter: "Online Products",
+    filter: "AI",
     featured: false,
     bg: "var(--soft)",
     title: "Described-AI",
@@ -321,7 +358,7 @@ export const PROJECTS: Project[] = [
     mark: "◈",
     shot: "store",
     category: "Online Store",
-    filter: "Online Stores",
+    filter: "E-commerce",
     featured: false,
     bg: "var(--sand)",
     title: "Luxeurs",
@@ -353,7 +390,7 @@ export const PROJECTS: Project[] = [
     mark: "⬢",
     shot: "app",
     category: "Hospital System",
-    filter: "Business Systems",
+    filter: "Web Apps",
     featured: false,
     bg: "var(--soft)",
     title: "AR Hospitals",

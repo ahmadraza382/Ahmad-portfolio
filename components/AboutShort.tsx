@@ -25,10 +25,11 @@ export default function AboutShort() {
             it.
           </h2>
           <p className="leading-[1.65] text-text-2 max-w-[54ch] m-0 mb-[22px] text-[clamp(16px,1.4vw,19px)]">
-            In the last two years I&apos;ve built a subscription product with online payments and
-            analytics, online stores, and a management system a government college uses
-            every day. Frontend and backend, both mine. What I enjoy most is taking
-            something messy and making it simple to use.
+            I&apos;ve built products people actually use: an English-learning platform
+            with 10,000+ learners, a dental-supplies platform trusted by 12,000+
+            professionals, and a management system a government college runs every day.
+            Frontend and backend, both mine. What I enjoy most is taking something messy
+            and making it simple to use.
           </p>
           <Link
             href="/about"

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { VALUES, TIMELINE, SKILLS } from "@/lib/data";
+import { VALUES, TIMELINE, SKILL_GROUPS } from "@/lib/data";
 
 export default function AboutPage() {
   const scrollContact = () => {
@@ -11,7 +11,7 @@ export default function AboutPage() {
   };
 
   return (
-    <section className="max-w-[1100px] mx-auto pt-[140px] px-[clamp(20px,5vw,64px)] pb-[100px]">
+    <section className="max-w-content mx-auto pt-[140px] px-[clamp(20px,5vw,64px)] pb-[100px]">
       <div data-reveal="" className="flex items-center gap-[14px] mb-[30px]">
         <Link href="/" data-cursor="link" className="font-mono text-[13px] text-text-2 no-underline">
           ← Home
@@ -96,14 +96,23 @@ export default function AboutPage() {
         <h2 className="font-mono text-[13px] tracking-[.18em] uppercase text-accent m-0 mb-[30px]">
           Full toolkit
         </h2>
-        <div className="flex flex-wrap gap-[10px]">
-          {SKILLS.map((s) => (
-            <span
-              key={s}
-              className="font-mono text-[13px] text-text border border-border rounded-full py-2 px-4"
-            >
-              {s}
-            </span>
+        <div className="flex flex-col gap-[28px]">
+          {SKILL_GROUPS.map((g) => (
+            <div key={g.title}>
+              <h3 className="font-mono text-[12px] tracking-[.14em] uppercase text-text-2 m-0 mb-[12px]">
+                {g.title}
+              </h3>
+              <div className="flex flex-wrap gap-[10px]">
+                {g.items.map((s) => (
+                  <span
+                    key={s}
+                    className="font-mono text-[13px] text-text border border-border rounded-full py-2 px-4"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
