@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Underline from "./Underline";
 
 export default function Footer() {
@@ -33,6 +34,9 @@ export default function Footer() {
         <div className="flex items-center justify-between flex-wrap gap-5 pt-8 border-t border-border">
           <span className="text-[14px] text-text-2">© 2026 Ahmad Raza — Full-Stack Developer</span>
           <div className="flex gap-[22px] items-center">
+            <Link href="/blog" data-cursor="link" className="text-[14px] text-text-2 no-underline">
+              Blog
+            </Link>
             <a
               href="https://github.com/ahmadraza382"
               target="_blank"

@@ -112,7 +112,7 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
         </div>
       </div>
 
-      {project.shots && project.shots.length > 0 ? (
+      {project.shots && project.shots.length > 0 && (
         <div data-reveal="" className="grid grid-cols-1 min-[600px]:grid-cols-2 gap-5 mb-[60px]">
           {project.shots.map((shot, i) => (
             <div
@@ -129,27 +129,6 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
               />
             </div>
           ))}
-        </div>
-      ) : (
-        <div data-reveal="" className="grid grid-cols-2 gap-5 mb-[60px]">
-          <div
-            className="rounded-[14px] bg-soft border border-border flex items-center justify-center relative"
-            style={{ aspectRatio: "4/3" }}
-          >
-            <span className="absolute top-[14px] left-[14px] font-mono text-[11px] text-text-2">
-              [ screen ]
-            </span>
-            <span className="font-serif text-[80px] text-accent opacity-[.16]">{project.mark}</span>
-          </div>
-          <div
-            className="rounded-[14px] bg-sand border border-border flex items-center justify-center relative"
-            style={{ aspectRatio: "4/3" }}
-          >
-            <span className="absolute top-[14px] left-[14px] font-mono text-[11px] text-text-2">
-              [ screen ]
-            </span>
-            <span className="font-serif text-[80px] text-accent opacity-[.16]">✳</span>
-          </div>
         </div>
       )}
 

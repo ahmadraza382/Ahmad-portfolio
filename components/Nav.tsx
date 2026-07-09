@@ -58,6 +58,7 @@ export default function Nav() {
             <Link href="/work" data-cursor="link" className={navLinkCls}>
               Work
             </Link>
+          
             <Link href="/about" data-cursor="link" className={navLinkCls}>
               About
             </Link>
@@ -121,6 +122,9 @@ export default function Nav() {
       >
         <Link href="/work" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-border`}>
           Work <span className="text-accent text-[22px]">↘</span>
+        </Link>
+        <Link href="/blog" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-border`}>
+          Blog <span className="text-accent text-[22px]">↘</span>
         </Link>
         <Link href="/about" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-border`}>
           About <span className="text-accent text-[22px]">↘</span>

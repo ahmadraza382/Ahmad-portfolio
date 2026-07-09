@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Full-stack developer from Faisalabad, Pakistan — building SaaS, e-commerce and platform products with React, Next.js, Node and TypeScript.",
+  alternates: { canonical: "/about" },
 };
 
 export default function About() {

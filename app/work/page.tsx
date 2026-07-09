@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Work",
   description:
     "Selected work: SaaS platforms, e-commerce storefronts and management systems built end to end with React, Next.js, Node and TypeScript.",
+  alternates: { canonical: "/work" },
 };
 
 export default async function WorkPage() {

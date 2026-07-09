@@ -15,10 +15,23 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.summary,
+    alternates: { canonical: `/work/${project.slug}` },
     openGraph: {
       title: `${project.title} — Ahmad Raza`,
       description: project.summary,
+      type: "article",
+      ...(project.cover ? { images: [{ url: project.cover }] } : {}),
     },
+    ...(project.cover
+      ? {
+          twitter: {
+            card: "summary_large_image" as const,
+            title: `${project.title} — Ahmad Raza`,
+            description: project.summary,
+            images: [project.cover],
+          },
+        }
+      : {}),
   };
 }
 

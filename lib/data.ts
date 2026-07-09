@@ -436,3 +436,90 @@ export const getNextProject = (slug: string) => {
   const idx = PROJECTS.findIndex((p) => p.slug === slug);
   return PROJECTS[(Math.max(idx, 0) + 1) % PROJECTS.length];
 };
+
+// ============================================================
+// Blog posts — managed from /admin/blog (Supabase). The array
+// below is the fallback content shown when Supabase isn't set up,
+// so /blog always has something to render (and to seed from).
+// ============================================================
+export interface BlogPost {
+  slug: string;
+  sort: number;
+  title: string;
+  excerpt: string;
+  /** Cover image URL — shown on the card, post hero, and as the OG image. */
+  cover?: string;
+  /** Post content in Markdown. */
+  body: string;
+  tags: string[];
+  /** Estimated read time in minutes; 0 = auto-estimate from body length. */
+  readMinutes: number;
+  published: boolean;
+  /** Display date, e.g. "2026-02-14". */
+  date: string;
+}
+
+export const POSTS: BlogPost[] = [
+  {
+    slug: "shipping-fast-without-breaking-things",
+    sort: 0,
+    title: "Shipping fast without breaking things",
+    excerpt:
+      "How I keep momentum on client projects — small slices, tight feedback loops, and a deploy pipeline I actually trust.",
+    cover: "",
+    tags: ["Workflow", "Next.js", "DX"],
+    readMinutes: 6,
+    published: true,
+    date: "2026-02-14",
+    body: `Speed and stability feel like opposites. They aren't — not if you set the work up right.
+
+## Ship in slices
+
+The single biggest lever is release size. A small, frequent release is *cheap to review, cheap to test, and cheap to roll back*. A big-bang launch is none of those.
+
+- Break a feature into the smallest thing that's still useful.
+- Ship it behind a flag if it isn't ready for everyone.
+- Watch it in production before building the next slice.
+
+## Make the safe path the easy path
+
+If the correct workflow is also the fastest workflow, people follow it without thinking. That means:
+
+1. **Preview deploys** on every pull request.
+2. **Type checks and tests** that run in seconds, not minutes.
+3. **One command** to reset a local database.
+
+> Momentum compounds; perfection stalls.
+
+The goal isn't zero mistakes. It's making mistakes small, visible, and fast to undo.`,
+  },
+  {
+    slug: "the-half-pixel-matters",
+    sort: 1,
+    title: "The half-pixel matters",
+    excerpt:
+      "A short case for sweating the details nobody asks for — the empty state, the slow query, the half-pixel border.",
+    cover: "",
+    tags: ["Craft", "UI", "Performance"],
+    readMinutes: 4,
+    published: true,
+    date: "2026-01-22",
+    body: `Nobody files a ticket for a half-pixel border. But everybody feels it.
+
+## Details are the work
+
+The polish that separates *fine* from *excellent* lives in the places no one explicitly asks about:
+
+- The empty state before any data loads.
+- The error message when the network drops.
+- The query that's 40ms today and 2s at scale.
+
+## Why it pays off
+
+Details are a proxy for care. When the small things are right, people trust the big things — even the parts they can't see. That trust is the whole game.`,
+  },
+];
+
+export const getPublishedPostsLocal = () =>
+  POSTS.filter((p) => p.published).sort((a, b) => a.sort - b.sort);
+export const getPostLocal = (slug: string) => POSTS.find((p) => p.slug === slug);
