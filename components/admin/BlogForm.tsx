@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import RichTextEditor from "./RichTextEditor";
 
 export interface BlogFormData {
   id?: string;
@@ -15,11 +16,19 @@ export interface BlogFormData {
   readMinutes: number;
   published: boolean;
   date: string;
+  metaTitle: string;
+  metaDescription: string;
+}
+
+/** Today's date as YYYY-MM-DD (for auto-dating new posts). */
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
 }
 
 const EMPTY: BlogFormData = {
   slug: "", sort: 0, title: "", excerpt: "", cover: "", body: "",
   tags: [], readMinutes: 0, published: false, date: "",
+  metaTitle: "", metaDescription: "",
 };
 
 const input =
@@ -100,7 +109,10 @@ function slugify(s: string) {
 
 export default function BlogForm({ initial }: { initial?: BlogFormData }) {
   const router = useRouter();
-  const [data, setData] = useState<BlogFormData>(initial ?? EMPTY);
+  // New posts default the date to today; editing keeps the saved date.
+  const [data, setData] = useState<BlogFormData>(
+    initial ?? { ...EMPTY, date: today() }
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imgError, setImgError] = useState<string | null>(null);
@@ -117,7 +129,7 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
     setBusy(true);
     setError(null);
 
-    // Map to DB column names (read_minutes is snake_case).
+    // Map to DB column names (snake_case).
     const payload = {
       slug: data.slug || slugify(data.title),
       sort: data.sort,
@@ -128,7 +140,9 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
       tags: data.tags,
       read_minutes: data.readMinutes,
       published: data.published,
-      date: data.date,
+      date: data.date || today(),
+      meta_title: data.metaTitle,
+      meta_description: data.metaDescription,
     };
 
     const url = isEdit ? `/api/admin/blog/${initial!.id}` : "/api/admin/blog";
@@ -164,8 +178,22 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
               required
             />
           </Field>
-          <Field label="Date (e.g. 2026-02-14)">
-            <input className={input} value={data.date} onChange={(e) => set("date", e.target.value)} placeholder="2026-02-14" />
+          <Field label="Date">
+            <div className="flex gap-2">
+              <input
+                type="date"
+                className={input}
+                value={data.date}
+                onChange={(e) => set("date", e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => set("date", today())}
+                className="px-3 rounded-[10px] border border-border text-[13px] font-semibold cursor-pointer hover:bg-soft transition-colors whitespace-nowrap"
+              >
+                Today
+              </button>
+            </div>
           </Field>
           <Field label="Read time (minutes, 0 = auto)">
             <input type="number" className={input} value={data.readMinutes} onChange={(e) => set("readMinutes", Number(e.target.value))} />
@@ -236,17 +264,46 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
 
       <Group
         title="Content"
-        desc="Markdown supported: # headings, **bold**, *italic*, `code`, [links](https://…), > quotes, - lists, 1. lists, ``` code fences, --- rules."
+        desc="Use the toolbar to format: bold, italic, headings, lists, quotes, links and images. Images upload to Supabase Storage as you insert them."
       >
-        <Field label="Body (Markdown)">
-          <textarea
-            className={`${input} font-mono text-[13.5px] leading-[1.6]`}
-            rows={20}
+        <span className={labelText}>Body</span>
+        <div className="mt-2">
+          <RichTextEditor
             value={data.body}
-            onChange={(e) => set("body", e.target.value)}
-            placeholder={"## A heading\n\nYour paragraph here. Use **bold**, *italic*, and [links](https://example.com).\n\n- point one\n- point two"}
+            onChange={(html) => set("body", html)}
+            onError={setImgError}
           />
-        </Field>
+        </div>
+      </Group>
+
+      <Group
+        title="SEO"
+        desc="Optional. Controls how this post appears in Google and social shares. Leave blank to fall back to the title / excerpt above."
+      >
+        <div className="grid gap-5">
+          <Field label="Meta title (blank = post title)">
+            <input
+              className={input}
+              value={data.metaTitle}
+              onChange={(e) => set("metaTitle", e.target.value)}
+              placeholder={data.title || "Post title"}
+              maxLength={70}
+            />
+          </Field>
+          <Field label="Meta description (blank = excerpt)">
+            <textarea
+              className={input}
+              rows={3}
+              value={data.metaDescription}
+              onChange={(e) => set("metaDescription", e.target.value)}
+              placeholder={data.excerpt || "A short, search-friendly summary (about 150–160 characters)."}
+              maxLength={200}
+            />
+          </Field>
+          <p className="text-[12px] text-text-2 font-mono m-0">
+            {data.metaDescription.length}/200 characters · aim for 150–160
+          </p>
+        </div>
       </Group>
 
       <Group title="Display (advanced)" desc="Ordering — default is usually fine.">

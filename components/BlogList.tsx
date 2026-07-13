@@ -56,6 +56,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                 >
                   {post.cover ? (
                     <Image
+                      key={post.cover}
                       src={post.cover}
                       alt={post.title}
                       fill

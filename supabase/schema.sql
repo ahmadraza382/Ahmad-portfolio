@@ -11,8 +11,9 @@ create table if not exists projects (
   no          text not null,                  -- "01", "02"...
   mark        text not null default '◆',      -- decorative glyph
   shot        text not null default 'screen', -- placeholder label
-  category    text not null,                  -- "SaaS · Web App"
-  filter      text not null,                  -- "Web Apps" | "Landing Pages" | "E-commerce"
+  category    text not null,                  -- card label, e.g. "Online Store · Live"
+  filter      text not null default '',       -- LEGACY single category (superseded by `filters`)
+  filters     text[] not null default '{}',   -- service categories — a project can have several
   featured    boolean not null default false,
   bg          text not null default 'var(--sand)',
   title       text not null,
@@ -36,6 +37,22 @@ create table if not exists projects (
 alter table projects add column if not exists sections jsonb not null default '[]';
 alter table projects add column if not exists cover text not null default '';
 alter table projects add column if not exists shots text[] not null default '{}';
+alter table projects add column if not exists filters text[] not null default '{}';
+alter table projects alter column filter set default '';
+
+-- Backfill: map the old single `filter` value onto the new `filters` array,
+-- translating old filter names to today's service categories.
+update projects set filters = array[
+  case filter
+    when 'Websites'   then 'Custom Websites'
+    when 'Web Apps'   then 'Custom Websites'
+    when 'Dashboards' then 'Custom Websites'
+    when 'SaaS'       then 'SaaS Products'
+    when 'E-commerce' then 'E-commerce & Shopify'
+    when 'AI'         then 'SaaS Products'
+    else filter
+  end
+] where filters = '{}' and filter <> '';
 
 -- ── Storage: bucket for project images (uploaded from /admin) ──
 -- Public read; uploads go through the server with the service-role key.
@@ -49,19 +66,25 @@ create policy "public read project images" on storage.objects
 
 -- Blog posts (drives /blog and /blog/[slug]; managed from /admin/blog)
 create table if not exists blog_posts (
-  id            uuid primary key default gen_random_uuid(),
-  slug          text unique not null,
-  sort          int  not null default 0,        -- display order (lower = first)
-  title         text not null,
-  excerpt       text not null default '',        -- short card/summary text
-  cover         text not null default '',        -- cover image URL (card + hero + OG)
-  body          text not null default '',        -- Markdown content
-  tags          text[] not null default '{}',
-  read_minutes  int  not null default 0,          -- 0 = auto-estimate from body
-  published     boolean not null default false,   -- only published posts show publicly
-  date          text not null default '',         -- display date, e.g. "2026-02-14"
-  created_at    timestamptz not null default now()
+  id                uuid primary key default gen_random_uuid(),
+  slug              text unique not null,
+  sort              int  not null default 0,        -- display order (lower = first)
+  title             text not null,
+  excerpt           text not null default '',        -- short card/summary text
+  cover             text not null default '',        -- cover image URL (card + hero + OG)
+  body              text not null default '',        -- rich-text HTML content
+  tags              text[] not null default '{}',
+  read_minutes      int  not null default 0,          -- 0 = auto-estimate from body
+  published         boolean not null default false,   -- only published posts show publicly
+  date              text not null default '',         -- display date, e.g. "2026-02-14"
+  meta_title        text not null default '',         -- SEO <title> override (blank = use title)
+  meta_description  text not null default '',         -- SEO meta description (blank = use excerpt)
+  created_at        timestamptz not null default now()
 );
+
+-- If the table already exists from an earlier version, add the new columns:
+alter table blog_posts add column if not exists meta_title text not null default '';
+alter table blog_posts add column if not exists meta_description text not null default '';
 
 -- Contact form submissions
 create table if not exists contact_messages (

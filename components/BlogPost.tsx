@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "./Footer";
-import { Markdown } from "@/lib/markdown";
+import { sanitizeHtml } from "@/lib/richtext";
 import type { BlogPost as Post } from "@/lib/data";
 
 function formatDate(d: string) {
@@ -11,7 +11,7 @@ function formatDate(d: string) {
   return parsed.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
-export default function BlogPost({ post, next }: { post: Post; next?: Post }) {
+export default function BlogPost({ post, related = [] }: { post: Post; related?: Post[] }) {
   return (
     <>
       <article className="max-w-[820px] mx-auto pt-[140px] px-[clamp(20px,5vw,64px)] pb-[80px]">
@@ -64,9 +64,11 @@ export default function BlogPost({ post, next }: { post: Post; next?: Post }) {
           </div>
         )}
 
-        <div data-reveal="" className="max-w-[68ch]">
-          <Markdown source={post.body} />
-        </div>
+        <div
+          data-reveal=""
+          className="blog-content max-w-[68ch]"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.body) }}
+        />
 
         {post.tags.length > 0 && (
           <div data-reveal="" className="flex flex-wrap gap-[10px] mt-[44px] pt-8 border-t border-border">
@@ -81,24 +83,56 @@ export default function BlogPost({ post, next }: { post: Post; next?: Post }) {
           </div>
         )}
 
-        {next && (
-          <div
-            data-reveal=""
-            className="flex items-center justify-between flex-wrap gap-5 mt-10 pt-9 border-t border-border"
-          >
-            <span className="font-mono text-[13px] text-text-2">Next post</span>
-            <Link
-              href={`/blog/${next.slug}`}
-              data-cursor="cta"
-              data-magnetic=""
-              className="inline-flex items-center gap-3 no-underline text-text"
-            >
-              <span className="font-serif italic text-[clamp(24px,4vw,40px)]">{next.title}</span>
-              <span className="text-accent text-[28px]">→</span>
-            </Link>
-          </div>
-        )}
       </article>
+
+      {related.length > 0 && (
+        <section className="max-w-content mx-auto px-[clamp(20px,5vw,64px)] pb-[90px]">
+          <div data-reveal="" className="pt-10 border-t border-border">
+            <h2 className="font-serif font-normal text-[clamp(24px,3vw,34px)] m-0 mb-8">
+              Keep reading
+            </h2>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[clamp(20px,3vw,36px)]">
+              {related.map((r) => (
+                <Link
+                  key={r.slug}
+                  href={`/blog/${r.slug}`}
+                  data-cursor="cta"
+                  data-magnetic=""
+                  className="group/rel no-underline flex flex-col"
+                >
+                  <div
+                    className="relative rounded-[14px] overflow-hidden border border-border mb-4"
+                    style={{ aspectRatio: "16/9", background: "var(--soft)" }}
+                  >
+                    {r.cover ? (
+                      <Image
+                        src={r.cover}
+                        alt={r.title}
+                        fill
+                        sizes="(min-width: 700px) 30vw, 100vw"
+                        className="object-cover transition-transform duration-500 group-hover/rel:scale-[1.04]"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center font-serif text-accent opacity-20 text-[clamp(48px,7vw,90px)]">
+                        ✦
+                      </div>
+                    )}
+                  </div>
+                  {r.date && (
+                    <span className="font-mono text-[12px] text-text-2 uppercase tracking-[.1em] mb-2">
+                      {formatDate(r.date)}
+                    </span>
+                  )}
+                  <h3 className="font-serif font-normal text-[22px] leading-[1.15] tracking-[-.01em] m-0 text-text transition-colors group-hover/rel:text-accent">
+                    {r.title}
+                  </h3>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <Footer />
     </>
   );

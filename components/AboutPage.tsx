@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { VALUES, TIMELINE, SKILL_GROUPS } from "@/lib/data";
 
 export default function AboutPage() {
@@ -19,36 +18,43 @@ export default function AboutPage() {
         <span className="font-mono text-[13px] text-text-2">/ about</span>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[clamp(40px,6vw,72px)] items-start mb-[80px]">
-        <div data-reveal="">
-          <h1 className="font-serif font-normal leading-[.98] tracking-[-.02em] m-0 mb-6 text-[clamp(44px,7vw,96px)]">
-            Hi, I&apos;m <span className="italic text-accent">Ahmad.</span>
-          </h1>
-          <p className="leading-[1.65] text-text-2 m-0 mb-5 text-[clamp(17px,1.6vw,21px)]">
-            I&apos;m a full-stack developer from Faisalabad, Pakistan. I learned web
-            development during my CS degree at GCU, did SMIT&apos;s one-year MERN course
-            alongside it, and I&apos;ve been building for real clients since 2025: SaaS,
-            e-commerce, healthcare and education projects.
-          </p>
-          <p className="leading-[1.65] text-text-2 m-0 text-[clamp(17px,1.6vw,21px)]">
-            I handle everything technical myself, from the database to what you see on
-            screen. I like keeping things simple, giving straight answers about time and
-            cost, and shipping something usable early instead of something perfect late.
-          </p>
-        </div>
-        <div
-          data-reveal=""
-          data-delay="100"
-          className="relative rounded-[18px] bg-soft border border-border overflow-hidden"
-          style={{ aspectRatio: "4/5" }}
-        >
-          <Image
-            src="/ahmad.png"
-            alt="Ahmad Raza"
-            fill
-            sizes="(min-width: 640px) 50vw, 100vw"
-            className="object-cover object-top"
-          />
+      <div data-reveal="" className="mb-[64px]">
+        <h1 className="font-serif font-normal leading-[.98] tracking-[-.02em] m-0 mb-6 max-w-[760px] text-[clamp(44px,7vw,96px)]">
+          Hi, I&apos;m <span className="italic text-accent">Ahmad.</span>
+        </h1>
+        <p className="leading-[1.65] text-text-2 m-0 mb-5 text-[clamp(17px,1.6vw,21px)]">
+          I&apos;m a full-stack developer from Faisalabad, Pakistan. I learned web
+          development during my CS degree at GCU, did SMIT&apos;s one-year MERN course
+          alongside it, and I&apos;ve been building for real clients since 2025: SaaS,
+          e-commerce, healthcare and education projects.
+        </p>
+        <p className="leading-[1.65] text-text-2 m-0 text-[clamp(17px,1.6vw,21px)]">
+          I handle everything technical myself, from the database to what you see on
+          screen. I like keeping things simple, giving straight answers about time and
+          cost, and shipping something usable early instead of something perfect late.
+        </p>
+      </div>
+
+      {/* intro video */}
+      <div data-reveal="" className="mb-[80px]">
+        <h2 className="font-mono text-[13px] tracking-[.18em] uppercase text-accent m-0 mb-[30px] text-center">
+          A quick intro
+        </h2>
+        <div className="mx-auto max-w-[900px]">
+          <div
+            className="relative rounded-[18px] overflow-hidden border border-border bg-soft"
+            style={{ aspectRatio: "16/9" }}
+          >
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              controls
+              preload="metadata"
+              playsInline
+            >
+              <source src="/intro.mp4" type="video/mp4" />
+              Your browser doesn&apos;t support embedded video.
+            </video>
+          </div>
         </div>
       </div>
 

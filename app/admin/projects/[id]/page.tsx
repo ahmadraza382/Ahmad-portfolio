@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProjectForm, { type ProjectFormData } from "@/components/admin/ProjectForm";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { normalizeCategories } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function EditProject({ params }: { params: { id: string } }
     mark: data.mark ?? "◆",
     shot: data.shot ?? "screen",
     category: data.category ?? "",
-    filter: data.filter ?? "Business Systems",
+    filters: normalizeCategories(data.filters, data.filter),
     featured: Boolean(data.featured),
     bg: data.bg ?? "var(--sand)",
     title: data.title ?? "",

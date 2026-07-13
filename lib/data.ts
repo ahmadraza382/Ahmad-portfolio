@@ -33,8 +33,10 @@ export interface Project {
   no: string;
   mark: string;
   shot: string;
+  /** Card label (free text), e.g. "Online Store · Live". */
   category: string;
-  filter: string;
+  /** Service categories — a project can belong to several (drives the /work filter bar). */
+  filters: string[];
   featured: boolean;
   bg: string;
   title: string;
@@ -60,7 +62,7 @@ export const SERVICES: Service[] = [
   {
     no: "01",
     icon: "❖",
-    title: "Websites",
+    title: "Custom Websites",
     desc: "Business websites that look premium, load fast and work perfectly on phones. Design included if you need it.",
   },
   {
@@ -211,7 +213,31 @@ export const TIMELINE: TimelineEntry[] = [
   },
 ];
 
-export const FILTERS: string[] = ["All", "Websites", "Web Apps", "SaaS", "E-commerce", "WordPress", "AI"];
+// Project categories = the services above. A project can belong to several.
+export const CATEGORIES: string[] = SERVICES.map((s) => s.title);
+
+// Filter bar on /work — "All" plus one filter per service.
+export const FILTERS: string[] = ["All", ...CATEGORIES];
+
+// Old single-value filter names (pre-categories) → today's service categories.
+// Keeps existing database rows working until they're re-saved from the admin.
+const LEGACY_FILTER_MAP: Record<string, string> = {
+  Websites: "Custom Websites",
+  "Web Apps": "Custom Websites",
+  Dashboards: "Custom Websites",
+  SaaS: "SaaS Products",
+  "E-commerce": "E-commerce & Shopify",
+  AI: "SaaS Products",
+};
+
+/** Resolve a project's categories from the new array, falling back to the legacy single value. */
+export function normalizeCategories(
+  filters?: string[] | null,
+  legacy?: string | null
+): string[] {
+  const list = filters && filters.length > 0 ? filters : legacy ? [legacy] : [];
+  return Array.from(new Set(list.map((f) => LEGACY_FILTER_MAP[f] ?? f)));
+}
 
 export const PROJECTS: Project[] = [
   {
@@ -220,7 +246,7 @@ export const PROJECTS: Project[] = [
     mark: "◆",
     shot: "dashboard",
     category: "Online Product",
-    filter: "SaaS",
+    filters: ["SaaS Products", "Custom Websites"],
     featured: true,
     bg: "var(--sand)",
     title: "LinkShort",
@@ -261,7 +287,7 @@ export const PROJECTS: Project[] = [
     mark: "❖",
     shot: "app",
     category: "Management System · Live",
-    filter: "Web Apps",
+    filters: ["Custom Websites"],
     featured: true,
     bg: "var(--soft)",
     title: "College Management System",
@@ -294,7 +320,7 @@ export const PROJECTS: Project[] = [
     mark: "✦",
     shot: "store",
     category: "Online Store",
-    filter: "E-commerce",
+    filters: ["E-commerce & Shopify", "Custom Websites"],
     featured: true,
     bg: "var(--sand)",
     title: "Beat2K Studio",
@@ -326,7 +352,7 @@ export const PROJECTS: Project[] = [
     mark: "◍",
     shot: "app",
     category: "AI Product",
-    filter: "AI",
+    filters: ["SaaS Products"],
     featured: false,
     bg: "var(--soft)",
     title: "Described-AI",
@@ -358,7 +384,7 @@ export const PROJECTS: Project[] = [
     mark: "◈",
     shot: "store",
     category: "Online Store",
-    filter: "E-commerce",
+    filters: ["E-commerce & Shopify", "Custom Websites"],
     featured: false,
     bg: "var(--sand)",
     title: "Luxeurs",
@@ -390,7 +416,7 @@ export const PROJECTS: Project[] = [
     mark: "⬢",
     shot: "app",
     category: "Hospital System",
-    filter: "Web Apps",
+    filters: ["Custom Websites"],
     featured: false,
     bg: "var(--soft)",
     title: "AR Hospitals",
@@ -449,7 +475,7 @@ export interface BlogPost {
   excerpt: string;
   /** Cover image URL — shown on the card, post hero, and as the OG image. */
   cover?: string;
-  /** Post content in Markdown. */
+  /** Post content as rich-text HTML (from the admin editor). */
   body: string;
   tags: string[];
   /** Estimated read time in minutes; 0 = auto-estimate from body length. */
@@ -457,6 +483,10 @@ export interface BlogPost {
   published: boolean;
   /** Display date, e.g. "2026-02-14". */
   date: string;
+  /** SEO <title> override — blank falls back to `title`. */
+  metaTitle?: string;
+  /** SEO meta description — blank falls back to `excerpt`. */
+  metaDescription?: string;
 }
 
 export const POSTS: BlogPost[] = [
@@ -471,27 +501,15 @@ export const POSTS: BlogPost[] = [
     readMinutes: 6,
     published: true,
     date: "2026-02-14",
-    body: `Speed and stability feel like opposites. They aren't — not if you set the work up right.
-
-## Ship in slices
-
-The single biggest lever is release size. A small, frequent release is *cheap to review, cheap to test, and cheap to roll back*. A big-bang launch is none of those.
-
-- Break a feature into the smallest thing that's still useful.
-- Ship it behind a flag if it isn't ready for everyone.
-- Watch it in production before building the next slice.
-
-## Make the safe path the easy path
-
-If the correct workflow is also the fastest workflow, people follow it without thinking. That means:
-
-1. **Preview deploys** on every pull request.
-2. **Type checks and tests** that run in seconds, not minutes.
-3. **One command** to reset a local database.
-
-> Momentum compounds; perfection stalls.
-
-The goal isn't zero mistakes. It's making mistakes small, visible, and fast to undo.`,
+    body: `<p>Speed and stability feel like opposites. They aren't — not if you set the work up right.</p>
+<h2>Ship in slices</h2>
+<p>The single biggest lever is release size. A small, frequent release is <em>cheap to review, cheap to test, and cheap to roll back</em>. A big-bang launch is none of those.</p>
+<ul><li>Break a feature into the smallest thing that's still useful.</li><li>Ship it behind a flag if it isn't ready for everyone.</li><li>Watch it in production before building the next slice.</li></ul>
+<h2>Make the safe path the easy path</h2>
+<p>If the correct workflow is also the fastest workflow, people follow it without thinking. That means:</p>
+<ol><li><strong>Preview deploys</strong> on every pull request.</li><li><strong>Type checks and tests</strong> that run in seconds, not minutes.</li><li><strong>One command</strong> to reset a local database.</li></ol>
+<blockquote><p>Momentum compounds; perfection stalls.</p></blockquote>
+<p>The goal isn't zero mistakes. It's making mistakes small, visible, and fast to undo.</p>`,
   },
   {
     slug: "the-half-pixel-matters",
@@ -504,19 +522,12 @@ The goal isn't zero mistakes. It's making mistakes small, visible, and fast to u
     readMinutes: 4,
     published: true,
     date: "2026-01-22",
-    body: `Nobody files a ticket for a half-pixel border. But everybody feels it.
-
-## Details are the work
-
-The polish that separates *fine* from *excellent* lives in the places no one explicitly asks about:
-
-- The empty state before any data loads.
-- The error message when the network drops.
-- The query that's 40ms today and 2s at scale.
-
-## Why it pays off
-
-Details are a proxy for care. When the small things are right, people trust the big things — even the parts they can't see. That trust is the whole game.`,
+    body: `<p>Nobody files a ticket for a half-pixel border. But everybody feels it.</p>
+<h2>Details are the work</h2>
+<p>The polish that separates <em>fine</em> from <em>excellent</em> lives in the places no one explicitly asks about:</p>
+<ul><li>The empty state before any data loads.</li><li>The error message when the network drops.</li><li>The query that's 40ms today and 2s at scale.</li></ul>
+<h2>Why it pays off</h2>
+<p>Details are a proxy for care. When the small things are right, people trust the big things — even the parts they can't see. That trust is the whole game.</p>`,
   },
 ];
 

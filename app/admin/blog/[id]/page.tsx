@@ -41,6 +41,8 @@ export default async function EditPost({ params }: { params: { id: string } }) {
     readMinutes: data.read_minutes ?? 0,
     published: Boolean(data.published),
     date: data.date ?? "",
+    metaTitle: data.meta_title ?? "",
+    metaDescription: data.meta_description ?? "",
   };
 
   return (

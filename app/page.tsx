@@ -8,8 +8,9 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { getFeaturedProjects } from "@/lib/projects";
 
-// Always render fresh so admin edits show up without a rebuild.
-export const dynamic = "force-dynamic";
+// Cached (ISR) for speed; admin edits trigger revalidatePath("/") so they
+// appear immediately, with a 1-hour self-healing fallback.
+export const revalidate = 3600;
 
 export default async function HomePage() {
   const featured = await getFeaturedProjects();

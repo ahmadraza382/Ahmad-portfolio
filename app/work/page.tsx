@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import WorkGallery from "@/components/WorkGallery";
 import { getAllProjects } from "@/lib/projects";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Work",

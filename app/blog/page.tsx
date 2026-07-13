@@ -3,7 +3,7 @@ import BlogList from "@/components/BlogList";
 import { getPublishedPosts } from "@/lib/blog";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Blog",

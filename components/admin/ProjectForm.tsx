@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FILTERS as SITE_FILTERS } from "@/lib/data";
+import { useRef, useState } from "react";
+import { CATEGORIES } from "@/lib/data";
 
 interface Section {
   heading: string;
@@ -17,7 +17,7 @@ export interface ProjectFormData {
   mark: string;
   shot: string;
   category: string;
-  filter: string;
+  filters: string[];
   featured: boolean;
   bg: string;
   title: string;
@@ -36,11 +36,9 @@ export interface ProjectFormData {
   sections: Section[];
 }
 
-const FILTERS = SITE_FILTERS.filter((f) => f !== "All");
-
 const EMPTY: ProjectFormData = {
   slug: "", sort: 0, no: "", mark: "◆", shot: "screen", category: "",
-  filter: FILTERS[0] ?? "Business Systems",
+  filters: [],
   featured: false, bg: "var(--sand)", title: "", blurb: "", tags: [], year: "",
   role: "", live: "", cover: "", shots: [], summary: "", problem: "",
   process: [], stack: [], results: [], sections: [],
@@ -62,6 +60,78 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className={labelText}>{label}</span>
       {children}
     </label>
+  );
+}
+
+/** Multi-select dropdown: pick one or more service categories for a project.
+ *  NOTE: must NOT be rendered inside a <label> (like Field) — label click
+ *  forwarding would re-toggle the button and the popup could never close. */
+function CategoriesDropdown({
+  label,
+  selected,
+  onChange,
+}: {
+  label: string;
+  selected: string[];
+  onChange: (next: string[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const toggle = (cat: string) =>
+    onChange(
+      selected.includes(cat) ? selected.filter((c) => c !== cat) : [...selected, cat]
+    );
+
+  return (
+    <div
+      className="flex flex-col gap-[6px]"
+      onKeyDown={(e) => {
+        if (e.key === "Escape" && open) {
+          e.stopPropagation();
+          setOpen(false);
+          btnRef.current?.focus();
+        }
+      }}
+    >
+      <span className={labelText}>{label}</span>
+      <div className="relative">
+        <button
+          ref={btnRef}
+          type="button"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+          className={`${input} relative z-20 flex items-center justify-between gap-2 text-left cursor-pointer`}
+        >
+          <span className={`truncate ${selected.length === 0 ? "text-text-2" : ""}`}>
+            {selected.length === 0 ? "Select categories…" : selected.join(", ")}
+          </span>
+          <span className="text-text-2 text-[11px] shrink-0">{open ? "▲" : "▼"}</span>
+        </button>
+        {open && (
+          <>
+            <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+            <div className="absolute z-20 top-full left-0 right-0 mt-1 max-h-[280px] overflow-y-auto bg-surface border border-border rounded-[10px] p-2 shadow-[0_12px_32px_rgba(0,0,0,.12)]">
+              {CATEGORIES.map((cat) => (
+                <label
+                  key={cat}
+                  className="flex items-center gap-[10px] px-2 py-[7px] rounded-[8px] cursor-pointer hover:bg-soft text-[14px]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(cat)}
+                    onChange={() => toggle(cat)}
+                    className="w-4 h-4 accent-[var(--accent)]"
+                  />
+                  {cat}
+                </label>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -130,6 +200,10 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormData }) 
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (data.filters.length === 0) {
+      setError("Pick at least one category — otherwise the project won't show under any /work filter.");
+      return;
+    }
     setBusy(true);
     setError(null);
     const url = isEdit ? `/api/admin/projects/${initial!.id}` : "/api/admin/projects";
@@ -185,14 +259,14 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormData }) 
           <Field label="Slug * (url, e.g. linkshort)">
             <input className={input} value={data.slug} onChange={(e) => set("slug", e.target.value)} required />
           </Field>
-          <Field label="Category">
+          <Field label="Card label (free text, e.g. Online Store · Live)">
             <input className={input} value={data.category} onChange={(e) => set("category", e.target.value)} />
           </Field>
-          <Field label="Filter">
-            <select className={input} value={data.filter} onChange={(e) => set("filter", e.target.value)}>
-              {FILTERS.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
-          </Field>
+          <CategoriesDropdown
+            label="Categories (pick one or more — the /work filter bar)"
+            selected={data.filters}
+            onChange={(next) => set("filters", next)}
+          />
           <Field label="Year">
             <input className={input} value={data.year} onChange={(e) => set("year", e.target.value)} />
           </Field>

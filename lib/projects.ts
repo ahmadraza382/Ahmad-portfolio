@@ -6,7 +6,7 @@
 // ============================================================
 import "server-only";
 import { getSupabaseAdmin } from "./supabase";
-import { PROJECTS as FALLBACK, type Project } from "./data";
+import { PROJECTS as FALLBACK, normalizeCategories, type Project } from "./data";
 
 export type { Project };
 
@@ -16,7 +16,8 @@ interface DbProject {
   mark: string;
   shot: string;
   category: string;
-  filter: string;
+  filter: string;              // legacy single value (kept for old rows)
+  filters?: string[] | null;   // service categories (a project can have several)
   featured: boolean;
   bg: string;
   title: string;
@@ -43,7 +44,7 @@ function fromDb(r: DbProject): Project {
     mark: r.mark,
     shot: r.shot,
     category: r.category,
-    filter: r.filter,
+    filters: normalizeCategories(r.filters, r.filter),
     featured: r.featured,
     bg: r.bg,
     title: r.title,

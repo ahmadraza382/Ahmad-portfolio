@@ -198,3 +198,114 @@ a.text-accent:hover {
     stroke-dashoffset: 0 !important;
   }
 }
+
+/* ============================================================
+   Rich-text: shared styles for the Tiptap editor (.prose-editor)
+   and the published post body (.blog-content).
+   ============================================================ */
+.prose-editor h2,
+.blog-content h2 {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 32px);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 1.6em 0 0.5em;
+}
+.prose-editor h3,
+.blog-content h3 {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 25px);
+  line-height: 1.2;
+  margin: 1.3em 0 0.4em;
+}
+.prose-editor p,
+.blog-content p {
+  color: var(--text-2);
+  line-height: 1.75;
+  margin: 0 0 1.1em;
+}
+.blog-content p {
+  font-size: clamp(16px, 1.5vw, 19px);
+}
+.prose-editor ul,
+.prose-editor ol,
+.blog-content ul,
+.blog-content ol {
+  color: var(--text-2);
+  line-height: 1.7;
+  margin: 0 0 1.2em;
+  padding-left: 1.4em;
+}
+.blog-content ul,
+.blog-content ol { font-size: clamp(16px, 1.5vw, 19px); }
+.prose-editor ul,
+.blog-content ul { list-style: disc; }
+.prose-editor ol,
+.blog-content ol { list-style: decimal; }
+.prose-editor li,
+.blog-content li { margin: 0.35em 0; }
+.prose-editor li::marker,
+.blog-content li::marker { color: var(--accent); }
+.prose-editor blockquote,
+.blog-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.1em;
+  margin: 1.4em 0;
+  font-family: var(--font-instrument), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 23px);
+  line-height: 1.5;
+  color: var(--text);
+}
+.prose-editor blockquote p,
+.blog-content blockquote p { color: var(--text); font-size: inherit; }
+.prose-editor a,
+.blog-content a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-editor code,
+.blog-content code {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.9em;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--soft);
+  border: 1px solid var(--border);
+}
+.prose-editor pre,
+.blog-content pre {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--soft);
+  padding: 1em 1.2em;
+  margin: 1.4em 0;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.prose-editor pre code,
+.blog-content pre code { background: none; border: 0; padding: 0; }
+.prose-editor img,
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin: 1.4em 0;
+}
+.prose-editor hr,
+.blog-content hr { border: 0; border-top: 1px solid var(--border); margin: 2em 0; }
+/* Placeholder text for the empty editor */
+.prose-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text-2);
+  opacity: 0.6;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

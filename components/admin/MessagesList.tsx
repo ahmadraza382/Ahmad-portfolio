@@ -14,10 +14,12 @@ export interface AdminMessage {
 
 export default function MessagesList({ messages }: { messages: AdminMessage[] }) {
   const router = useRouter();
+  // Tracks which row + which action is in flight, e.g. "id:read" / "id:delete".
   const [busy, setBusy] = useState<string | null>(null);
+  const rowBusy = (id: string) => busy?.startsWith(`${id}:`);
 
   const toggleRead = async (m: AdminMessage) => {
-    setBusy(m.id);
+    setBusy(`${m.id}:read`);
     await fetch(`/api/admin/messages/${m.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -29,7 +31,7 @@ export default function MessagesList({ messages }: { messages: AdminMessage[] })
 
   const del = async (m: AdminMessage) => {
     if (!confirm(`Delete message from ${m.name}?`)) return;
-    setBusy(m.id);
+    setBusy(`${m.id}:delete`);
     await fetch(`/api/admin/messages/${m.id}`, { method: "DELETE" });
     setBusy(null);
     router.refresh();
@@ -75,18 +77,18 @@ export default function MessagesList({ messages }: { messages: AdminMessage[] })
           <div className="flex gap-2">
             <button
               onClick={() => toggleRead(m)}
-              disabled={busy === m.id}
+              disabled={rowBusy(m.id)}
               className="px-3 py-[6px] rounded-[8px] border border-border text-[12px] font-semibold bg-transparent text-text cursor-pointer disabled:opacity-50"
             >
-              Mark {m.read ? "unread" : "read"}
+              {busy === `${m.id}:read` ? "Saving…" : `Mark ${m.read ? "unread" : "read"}`}
             </button>
             <button
               onClick={() => del(m)}
-              disabled={busy === m.id}
+              disabled={rowBusy(m.id)}
               className="px-3 py-[6px] rounded-[8px] border border-border text-[12px] font-semibold bg-transparent cursor-pointer disabled:opacity-50"
               style={{ color: "#c0392b" }}
             >
-              Delete
+              {busy === `${m.id}:delete` ? "Deleting…" : "Delete"}
             </button>
           </div>
         </div>

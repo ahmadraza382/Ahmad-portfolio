@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/auth";
+import { SESSION_COOKIE } from "@/lib/session-cookie";
 
 // Lightweight edge gate: if there's no session cookie at all, bounce to login.
 // Full cryptographic verification happens in the admin server layout

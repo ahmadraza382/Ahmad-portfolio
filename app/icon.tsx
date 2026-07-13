@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og";
 
 // Favicon generated in code — the round "a" mark used in the nav.
+// Edge runtime: the Node build of @vercel/og crashes ("Invalid URL")
+// when prerendering on Windows; the edge build has no such issue.
+export const runtime = "edge";
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import CaseStudy from "@/components/CaseStudy";
 import { getProjectBySlug, getNextProjectAfter } from "@/lib/projects";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,

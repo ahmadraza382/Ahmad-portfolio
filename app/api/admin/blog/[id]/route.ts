@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { isAdmin } from "@/lib/admin-guard";
+import { revalidateBlog } from "@/lib/revalidate";
 
 export const runtime = "nodejs";
 
 const FIELDS = [
   "slug", "sort", "title", "excerpt", "cover", "body",
   "tags", "read_minutes", "published", "date",
+  "meta_title", "meta_description",
 ];
 
 function pick(body: Record<string, unknown>) {
@@ -34,6 +36,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateBlog(data?.slug);
   return NextResponse.json({ post: data });
 }
 
@@ -42,7 +45,15 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   const supabase = getSupabaseAdmin();
   if (!supabase) return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
 
+  // Grab the slug first so we can revalidate that specific post page.
+  const { data: existing } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("id", params.id)
+    .single();
+
   const { error } = await supabase.from("blog_posts").delete().eq("id", params.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateBlog(existing?.slug);
   return NextResponse.json({ ok: true });
 }

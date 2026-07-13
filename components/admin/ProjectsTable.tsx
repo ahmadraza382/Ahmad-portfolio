@@ -9,7 +9,6 @@ export interface AdminProjectRow {
   slug: string;
   title: string;
   category: string;
-  filter: string;
   featured: boolean;
 }
 

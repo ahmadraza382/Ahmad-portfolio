@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPost from "@/components/BlogPost";
 import { getPublishedPosts, getPostBySlug } from "@/lib/blog";
-import { stripMarkdown } from "@/lib/markdown";
+import { htmlToText } from "@/lib/richtext";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import type { BlogPost as Post } from "@/lib/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -15,15 +16,18 @@ export async function generateMetadata({
   const post = await getPostBySlug(params.slug);
   if (!post || !post.published) return { title: "Post not found" };
 
-  const description = post.excerpt || stripMarkdown(post.body, 160);
+  // Admin-provided meta wins; otherwise fall back to title/excerpt/body.
+  const metaTitle = post.metaTitle?.trim() || post.title;
+  const description =
+    post.metaDescription?.trim() || post.excerpt || htmlToText(post.body, 160);
   const url = `${SITE_URL}/blog/${post.slug}`;
 
   return {
-    title: post.title,
+    title: metaTitle,
     description,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
-      title: `${post.title} — Ahmad Raza`,
+      title: `${metaTitle} — Ahmad Raza`,
       description,
       url,
       type: "article",
@@ -32,11 +36,21 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${post.title} — Ahmad Raza`,
+      title: `${metaTitle} — Ahmad Raza`,
       description,
       ...(post.cover ? { images: [post.cover] } : {}),
     },
   };
+}
+
+/** Pick related posts: most shared tags first, then fill with newest others. */
+function pickRelated(current: Post, all: Post[], count = 3): Post[] {
+  const others = all.filter((p) => p.slug !== current.slug);
+  const tags = new Set(current.tags ?? []);
+  const scored = others
+    .map((p) => ({ p, score: (p.tags ?? []).filter((t) => tags.has(t)).length }))
+    .sort((a, b) => b.score - a.score);
+  return scored.slice(0, count).map((s) => s.p);
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -46,13 +60,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     return null;
   }
 
-  // Next published post (by sort order), wrapping around.
   const published = await getPublishedPosts();
-  const idx = published.findIndex((p) => p.slug === post.slug);
-  const next =
-    published.length > 1 ? published[(Math.max(idx, 0) + 1) % published.length] : undefined;
+  const related = pickRelated(post, published, 3);
 
-  const description = post.excerpt || stripMarkdown(post.body, 200);
+  const description =
+    post.metaDescription?.trim() || post.excerpt || htmlToText(post.body, 200);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -74,7 +86,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BlogPost post={post} next={next} />
+      <BlogPost post={post} related={related} />
     </>
   );
 }

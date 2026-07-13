@@ -13,7 +13,7 @@ export default async function AdminProjects() {
   if (supabase) {
     const { data } = await supabase
       .from("projects")
-      .select("id, slug, title, category, filter, featured")
+      .select("id, slug, title, category, featured")
       .order("sort", { ascending: true });
     rows = (data ?? []) as AdminProjectRow[];
   } else {
@@ -22,7 +22,6 @@ export default async function AdminProjects() {
       slug: p.slug,
       title: p.title,
       category: p.category,
-      filter: p.filter,
       featured: p.featured,
     }));
   }

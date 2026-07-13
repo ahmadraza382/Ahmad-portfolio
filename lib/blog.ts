@@ -21,6 +21,8 @@ interface DbBlogPost {
   read_minutes: number | null;
   published: boolean;
   date: string;
+  meta_title: string | null;
+  meta_description: string | null;
 }
 
 function fromDb(r: DbBlogPost): BlogPost {
@@ -35,6 +37,8 @@ function fromDb(r: DbBlogPost): BlogPost {
     readMinutes: r.read_minutes ?? 0,
     published: r.published,
     date: r.date ?? "",
+    metaTitle: r.meta_title ?? "",
+    metaDescription: r.meta_description ?? "",
   };
 }
 
@@ -65,8 +69,9 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | undefined>
   return (await getAllPosts()).find((p) => p.slug === slug);
 }
 
-/** Estimate read time (minutes) from Markdown body at ~200 wpm; min 1. */
-export function estimateReadMinutes(body: string): number {
-  const words = body.trim().split(/\s+/).filter(Boolean).length;
+/** Estimate read time (minutes) from an HTML body at ~200 wpm; min 1. */
+export function estimateReadMinutes(html: string): number {
+  const text = (html ?? "").replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/gi, " ");
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
 }

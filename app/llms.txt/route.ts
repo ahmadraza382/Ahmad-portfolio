@@ -9,7 +9,7 @@ import {
   LINKEDIN_URL,
 } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 export const runtime = "nodejs";
 
 /**

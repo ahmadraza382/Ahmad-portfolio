@@ -55,15 +55,17 @@ export default function FeaturedWork({ featured }: { featured: Project[] }) {
               <div className={`grid grid-cols-1 ${cols} gap-[clamp(20px,3vw,44px)] items-center`}>
                 <div
                   className={`group/proj proj-media relative rounded-[18px] overflow-hidden border border-border ${mediaOrder}`}
-                  style={{ aspectRatio: "16/11", background: proj.bg }}
+                  style={{ aspectRatio: "16/9", background: proj.bg }}
                 >
                   {proj.cover ? (
                     <Image
+                      key={proj.cover}
                       src={proj.cover}
                       alt={proj.title}
                       fill
                       sizes="(min-width: 861px) 60vw, 100vw"
-                      className="object-cover"
+                      className="object-contain"
+                      priority={i === 0}
                     />
                   ) : (
                     <>
@@ -75,7 +77,7 @@ export default function FeaturedWork({ featured }: { featured: Project[] }) {
                       </div>
                     </>
                   )}
-                  <div className="proj-overlay absolute inset-0 bg-accent flex items-center justify-center">
+                  <div className="proj-overlay absolute inset-0 bg-accent opacity-0 group-hover/proj:opacity-90 flex items-center justify-center">
                     <span className="text-white font-semibold text-[17px] inline-flex items-center gap-2">
                       View case study <span className="text-[19px]">↗</span>
                     </span>

@@ -2,15 +2,31 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FILTERS, type Project } from "@/lib/data";
 
 export default function WorkGallery({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState("All");
-  const router = useRouter();
+  const gridRef = useRef<HTMLDivElement>(null);
+  const interacted = useRef(false);
 
-  const list = filter === "All" ? projects : projects.filter((p) => p.filter === filter);
+  const list =
+    filter === "All" ? projects : projects.filter((p) => p.filters.includes(filter));
+
+  // The site-wide reveal animation (data-reveal → data-show) is only wired up
+  // on route change, so cards remounted by a filter switch would stay at
+  // opacity 0 forever. Once the user filters, show new cards immediately.
+  useEffect(() => {
+    if (!interacted.current) return;
+    gridRef.current
+      ?.querySelectorAll("[data-reveal]:not([data-show])")
+      .forEach((el) => el.setAttribute("data-show", ""));
+  }, [filter]);
+
+  const pickFilter = (f: string) => {
+    interacted.current = true;
+    setFilter(f);
+  };
 
   return (
     <section className="max-w-content mx-auto pt-[140px] px-[clamp(20px,5vw,64px)] pb-[90px]">
@@ -36,7 +52,7 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
           return (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+              onClick={() => pickFilter(f)}
               data-cursor="link"
               className="py-[10px] px-5 rounded-full font-sans font-semibold text-[14px] cursor-pointer transition-all duration-300"
               style={{
@@ -51,50 +67,77 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
         })}
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(330px,1fr))] gap-[clamp(20px,3vw,40px)]">
-        {list.map((proj) => (
-          <div
-            key={proj.slug}
-            data-reveal=""
-            onClick={() => router.push(`/work/${proj.slug}`)}
-            data-cursor="cta"
-            data-magnetic=""
-            className="cursor-pointer"
-          >
-            <div
-              className="group/proj proj-card relative rounded-[16px] overflow-hidden border border-border mb-[18px]"
-              style={{ aspectRatio: "16/11", background: proj.bg }}
+      {list.length === 0 && (
+        <div className="border border-dashed border-border rounded-[16px] px-8 py-16 text-center">
+          <p className="text-text-2 text-[16px] m-0">
+            Nothing in “{filter}” yet.{" "}
+            <button
+              onClick={() => pickFilter("All")}
+              data-cursor="link"
+              className="bg-transparent border-none p-0 font-semibold text-accent text-[16px] cursor-pointer underline underline-offset-4"
             >
-              {proj.cover ? (
-                <Image
-                  src={proj.cover}
-                  alt={proj.title}
-                  fill
-                  sizes="(min-width: 700px) 33vw, 100vw"
-                  className="object-cover"
-                />
-              ) : (
-                <>
-                  <span className="absolute top-[14px] left-[14px] font-mono text-[11px] text-text-2 z-[2]">
-                    [ {proj.shot} ]
-                  </span>
-                  <div className="absolute inset-0 flex items-center justify-center font-serif text-accent opacity-20 text-[clamp(70px,10vw,120px)]">
-                    {proj.mark}
-                  </div>
-                </>
-              )}
-              <span className="absolute top-[14px] right-4 font-mono text-[12px] bg-bg/80 text-text-2 z-[2] px-2 py-[2px] rounded-[6px]">
-                {proj.year}
-              </span>
-              <div className="proj-overlay absolute inset-0 bg-accent flex items-center justify-center">
-                <span className="text-white font-semibold text-[16px]">View case study ↗</span>
+              See all work →
+            </button>
+          </p>
+        </div>
+      )}
+
+      <div
+        ref={gridRef}
+        className="grid grid-cols-[repeat(auto-fill,minmax(330px,1fr))] gap-[clamp(20px,3vw,40px)]"
+      >
+        {list.map((proj) => (
+          <div key={proj.slug} data-reveal="" className="group/proj">
+            <Link
+              href={`/work/${proj.slug}`}
+              data-cursor="cta"
+              data-magnetic=""
+              aria-label={proj.title}
+              className="block cursor-pointer"
+            >
+              <div
+                className="proj-card relative rounded-[16px] overflow-hidden border border-border mb-[18px]"
+                style={proj.cover ? { background: proj.bg } : { aspectRatio: "16/11", background: proj.bg }}
+              >
+                {proj.cover ? (
+                  <Image
+                    key={proj.cover}
+                    src={proj.cover}
+                    alt={proj.title}
+                    width={1600}
+                    height={1100}
+                    sizes="(min-width: 700px) 33vw, 100vw"
+                    className="w-full h-auto block"
+                  />
+                ) : (
+                  <>
+                    <span className="absolute top-[14px] left-[14px] font-mono text-[11px] text-text-2 z-[2]">
+                      [ {proj.shot} ]
+                    </span>
+                    <div className="absolute inset-0 flex items-center justify-center font-serif text-accent opacity-20 text-[clamp(70px,10vw,120px)]">
+                      {proj.mark}
+                    </div>
+                  </>
+                )}
+                <span className="absolute top-[14px] right-4 font-mono text-[12px] bg-bg/80 text-text-2 z-[2] px-2 py-[2px] rounded-[6px]">
+                  {proj.year}
+                </span>
+                <div className="proj-overlay absolute inset-0 bg-accent flex items-center justify-center">
+                  <span className="text-white font-semibold text-[16px]">View case study ↗</span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-baseline justify-between gap-3">
-              <h3 className="font-serif font-normal text-[26px] tracking-[-.01em] m-0">
-                {proj.title}
-              </h3>
-              <span className="font-mono text-[11px] text-text-2 uppercase tracking-[.1em] whitespace-nowrap">
+            </Link>
+            <div className="flex items-baseline gap-3">
+              <Link
+                href={`/work/${proj.slug}`}
+                data-cursor="link"
+                className="flex-1 min-w-0 no-underline"
+              >
+                <h3 className="font-serif font-normal text-[26px] leading-[1.1] tracking-[-.01em] m-0 line-clamp-2 text-text transition-colors duration-200 group-hover/proj:text-accent">
+                  {proj.title}
+                </h3>
+              </Link>
+              <span className="flex-1 min-w-0 text-right font-mono text-[11px] text-text-2 uppercase tracking-[.1em]">
                 {proj.category}
               </span>
             </div>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { isAdmin } from "@/lib/admin-guard";
+import { revalidateBlog } from "@/lib/revalidate";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,7 @@ export const runtime = "nodejs";
 const FIELDS = [
   "slug", "sort", "title", "excerpt", "cover", "body",
   "tags", "read_minutes", "published", "date",
+  "meta_title", "meta_description",
 ];
 
 function pick(body: Record<string, unknown>) {
@@ -48,5 +50,6 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabase.from("blog_posts").insert(row).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateBlog(data?.slug);
   return NextResponse.json({ post: data });
 }
