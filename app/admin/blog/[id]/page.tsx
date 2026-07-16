@@ -40,6 +40,7 @@ export default async function EditPost({ params }: { params: { id: string } }) {
     tags: data.tags ?? [],
     readMinutes: data.read_minutes ?? 0,
     published: Boolean(data.published),
+    publishAt: data.publish_at ?? "",
     date: data.date ?? "",
     metaTitle: data.meta_title ?? "",
     metaDescription: data.meta_description ?? "",

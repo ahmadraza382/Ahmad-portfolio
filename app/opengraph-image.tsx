@@ -20,7 +20,7 @@ export default function OgImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           background: "#fcfcfa",
-          color: "#16190f",
+          color: "#15242e",
           padding: 72,
           fontFamily: "Georgia, serif",
         }}
@@ -32,7 +32,7 @@ export default function OgImage() {
             gap: 18,
             fontSize: 28,
             fontFamily: "monospace",
-            color: "#1f6e5a",
+            color: "#356469",
           }}
         >
           <div
@@ -40,7 +40,7 @@ export default function OgImage() {
               width: 52,
               height: 52,
               borderRadius: "50%",
-              background: "#1f6e5a",
+              background: "#356469",
               color: "#ffffff",
               display: "flex",
               alignItems: "center",
@@ -63,7 +63,7 @@ export default function OgImage() {
           </div>
           <div style={{ fontSize: 66, lineHeight: 1.05, display: "flex" }}>
             designed, built{" "}
-            <span style={{ fontStyle: "italic", color: "#1f6e5a", marginLeft: 16 }}>
+            <span style={{ fontStyle: "italic", color: "#356469", marginLeft: 16 }}>
               and launched.
             </span>
           </div>
@@ -76,7 +76,7 @@ export default function OgImage() {
             alignItems: "center",
             fontSize: 26,
             fontFamily: "monospace",
-            color: "#6b7060",
+            color: "#555555",
           }}
         >
           <div style={{ display: "flex" }}>Full-Stack Developer</div>

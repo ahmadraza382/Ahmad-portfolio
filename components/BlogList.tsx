@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Footer from "./Footer";
 import type { BlogPost } from "@/lib/data";
 
 function formatDate(d: string) {
@@ -26,7 +25,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
             </Link>
             <span className="font-mono text-[13px] text-text-2">/ blog</span>
           </div>
-          <h1 className="font-serif font-normal leading-[.98] tracking-[-.02em] m-0 text-[clamp(44px,8vw,108px)]">
+          <h1 className="font-heading font-normal leading-[.98] tracking-[-.02em] m-0 text-[clamp(44px,8vw,108px)]">
             The <span className="italic text-accent">blog</span>
           </h1>
           <p className="mt-[22px] text-text-2 max-w-[52ch] text-[clamp(16px,1.5vw,20px)]">
@@ -51,8 +50,8 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                 className="cursor-pointer flex flex-col"
               >
                 <div
-                  className="group/post relative rounded-[16px] overflow-hidden border border-border mb-[18px]"
-                  style={{ aspectRatio: "16/9", background: "var(--soft)" }}
+                  className="group/post relative rounded-[16px] overflow-hidden border border-border mb-[18px] bg-soft"
+                  style={{ aspectRatio: "16/9" }}
                 >
                   {post.cover ? (
                     <Image
@@ -78,7 +77,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
                     <span className="font-mono text-[12px] text-text-2">· {post.readMinutes} min read</span>
                   )}
                 </div>
-                <h2 className="font-serif font-normal text-[26px] leading-[1.1] tracking-[-.01em] m-0 mb-[10px]">
+                <h2 className="font-heading font-normal text-[26px] leading-[1.1] tracking-[-.01em] m-0 mb-[10px]">
                   {post.title}
                 </h2>
                 <p className="text-[14px] leading-[1.6] text-text-2 m-0 mb-4">{post.excerpt}</p>
@@ -99,7 +98,6 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
           </div>
         )}
       </section>
-      <Footer />
     </>
   );
 }

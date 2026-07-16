@@ -26,7 +26,7 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
 
       <h1
         data-reveal=""
-        className="font-serif font-normal leading-[.96] tracking-[-.02em] m-0 mb-[22px] text-[clamp(44px,8vw,104px)]"
+        className="font-heading font-normal leading-[.96] tracking-[-.02em] m-0 mb-[22px] text-[clamp(44px,8vw,104px)]"
       >
         {project.title}
       </h1>
@@ -94,11 +94,11 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[50px] mb-[60px]">
         <div data-reveal="">
-          <h2 className="font-serif font-normal text-[30px] m-0 mb-4">The problem</h2>
+          <h2 className="font-heading font-normal text-[30px] m-0 mb-4">The problem</h2>
           <p className="text-[16px] leading-[1.7] text-text-2 m-0">{project.problem}</p>
         </div>
         <div data-reveal="" data-delay="100">
-          <h2 className="font-serif font-normal text-[30px] m-0 mb-4">How I approached it</h2>
+          <h2 className="font-heading font-normal text-[30px] m-0 mb-4">How I approached it</h2>
           <div className="flex flex-col gap-[14px]">
             {project.process.map((step, i) => (
               <div key={i} className="flex gap-[14px] items-start">
@@ -139,7 +139,7 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
             .map((s, i) => (
               <div data-reveal="" key={i}>
                 {s.heading?.trim() && (
-                  <h2 className="font-serif font-normal text-[30px] m-0 mb-4">{s.heading}</h2>
+                  <h2 className="font-heading font-normal text-[30px] m-0 mb-4">{s.heading}</h2>
                 )}
                 <p className="text-[16px] leading-[1.7] text-text-2 m-0 whitespace-pre-wrap">
                   {s.body}
@@ -150,7 +150,7 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
       )}
 
       <div data-reveal="" className="mb-[60px]">
-        <h2 className="font-serif font-normal text-[30px] m-0 mb-[18px]">Built with</h2>
+        <h2 className="font-heading font-normal text-[30px] m-0 mb-[18px]">Built with</h2>
         <div className="flex flex-wrap gap-[10px]">
           {project.stack.map((tech) => (
             <span
@@ -167,7 +167,7 @@ export default function CaseStudy({ project, next }: { project: Project; next: P
         data-reveal=""
         className="bg-soft border border-border rounded-[20px] p-[clamp(30px,4vw,56px)] mb-[60px]"
       >
-        <h2 className="font-serif font-normal text-[30px] m-0 mb-[30px]">The results</h2>
+        <h2 className="font-heading font-normal text-[30px] m-0 mb-[30px]">The results</h2>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-[30px]">
           {project.results.map(([val, label], i) => (
             <div key={i}>

@@ -3,7 +3,8 @@ import BlogList from "@/components/BlogList";
 import { getPublishedPosts } from "@/lib/blog";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
-export const revalidate = 3600;
+// Short window so scheduled posts appear close to their go-live time.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Blog",

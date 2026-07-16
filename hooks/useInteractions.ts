@@ -80,65 +80,83 @@ export function useReveal(dep?: unknown) {
       window.setTimeout(() => el.setAttribute("data-show", "1"), d);
     };
 
-    document.querySelectorAll<SVGElement>("[data-underline]").forEach((u) => {
-      if (!u.closest("[data-reveal]")) u.classList.add("draw-now");
-    });
-
-    document.querySelectorAll<HTMLElement>("[data-float]").forEach((el) => {
-      if (!reduced) el.style.animation = "floaty 6s ease-in-out infinite";
-    });
-
-    const targets = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]:not([data-show])")
-    );
-
-    if (reduced) {
-      targets.forEach(show);
-      return;
-    }
+    const primeStatics = () => {
+      document.querySelectorAll<SVGElement>("[data-underline]").forEach((u) => {
+        if (!u.closest("[data-reveal]")) u.classList.add("draw-now");
+      });
+      if (!reduced) {
+        document.querySelectorAll<HTMLElement>("[data-float]").forEach((el) => {
+          if (!el.style.animation) el.style.animation = "floaty 6s ease-in-out infinite";
+        });
+      }
+    };
 
     const hasIO = typeof IntersectionObserver !== "undefined";
+    const io =
+      !reduced && hasIO
+        ? new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  show(entry.target as HTMLElement);
+                  io!.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.06 }
+          )
+        : null;
 
-    if (hasIO) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              show(entry.target as HTMLElement);
-              io.unobserve(entry.target);
-            }
-          });
-        },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.06 }
+    // Arm every not-yet-shown target: reduced-motion reveals instantly, otherwise
+    // observe it and immediately reveal anything already within the viewport.
+    const arm = () => {
+      primeStatics();
+      const targets = document.querySelectorAll<HTMLElement>(
+        "[data-reveal]:not([data-show])"
       );
-      targets.forEach((el) => io.observe(el));
-
       const vh = window.innerHeight;
       targets.forEach((el) => {
+        if (reduced) {
+          show(el);
+          return;
+        }
+        if (io) io.observe(el);
         const r = el.getBoundingClientRect();
         if (r.top < vh * 0.96 && r.bottom > 0) show(el);
       });
+    };
 
-      return () => io.disconnect();
+    arm();
+    if (reduced) return;
+
+    // Content that arrives AFTER this effect — route views streamed in through a
+    // Suspense/loading.tsx boundary, or late hydration — would otherwise never be
+    // revealed (stuck at opacity:0). Re-arm whenever new nodes are added.
+    let raf = 0;
+    const mo = new MutationObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(arm);
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    // Safety net: reveal in-view content even if the observer misfires.
+    const timers = [120, 400, 900].map((t) => window.setTimeout(arm, t));
+
+    const onScrollResize = hasIO ? null : () => arm();
+    if (onScrollResize) {
+      window.addEventListener("scroll", onScrollResize, { passive: true });
+      window.addEventListener("resize", onScrollResize, { passive: true });
     }
 
-    const check = () => {
-      const vh = window.innerHeight;
-      document
-        .querySelectorAll<HTMLElement>("[data-reveal]:not([data-show])")
-        .forEach((el) => {
-          const r = el.getBoundingClientRect();
-          if (r.top < vh * 0.94 && r.bottom > -40) show(el);
-        });
-    };
-    check();
-    const timers = [80, 260, 560, 900].map((t) => window.setTimeout(check, t));
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check, { passive: true });
     return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
+      io?.disconnect();
+      mo.disconnect();
+      cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
+      if (onScrollResize) {
+        window.removeEventListener("scroll", onScrollResize);
+        window.removeEventListener("resize", onScrollResize);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dep]);

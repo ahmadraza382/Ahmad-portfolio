@@ -11,11 +11,19 @@ export default async function AdminBlog() {
   let rows: AdminBlogRow[] = [];
 
   if (supabase) {
+    // select * so the page still works if the publish_at migration hasn't run yet.
     const { data } = await supabase
       .from("blog_posts")
-      .select("id, slug, title, date, published")
+      .select("*")
       .order("sort", { ascending: true });
-    rows = (data ?? []) as AdminBlogRow[];
+    rows = ((data ?? []) as (AdminBlogRow & { publish_at: string | null })[]).map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      date: p.date,
+      published: p.published,
+      publishAt: p.publish_at ?? "",
+    }));
   } else {
     rows = FALLBACK.map((p, i) => ({
       id: `sample-${i}`,
@@ -23,6 +31,7 @@ export default async function AdminBlog() {
       title: p.title,
       date: p.date,
       published: p.published,
+      publishAt: p.publishAt ?? "",
     }));
   }
 

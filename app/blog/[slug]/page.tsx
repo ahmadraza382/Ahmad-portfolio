@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPost from "@/components/BlogPost";
-import { getPublishedPosts, getPostBySlug } from "@/lib/blog";
+import { getPublishedPosts, getPostBySlug, isLive } from "@/lib/blog";
 import { htmlToText } from "@/lib/richtext";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import type { BlogPost as Post } from "@/lib/data";
 
-export const revalidate = 3600;
+// Short window so scheduled posts go live close to their time (see isLive()).
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -14,7 +15,7 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
-  if (!post || !post.published) return { title: "Post not found" };
+  if (!post || !isLive(post)) return { title: "Post not found" };
 
   // Admin-provided meta wins; otherwise fall back to title/excerpt/body.
   const metaTitle = post.metaTitle?.trim() || post.title;
@@ -55,7 +56,7 @@ function pickRelated(current: Post, all: Post[], count = 3): Post[] {
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await getPostBySlug(params.slug);
-  if (!post || !post.published) {
+  if (!post || !isLive(post)) {
     notFound();
     return null;
   }
@@ -80,11 +81,25 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     isPartOf: { "@type": "Blog", name: `Blog — ${SITE_NAME}`, url: `${SITE_URL}/blog` },
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <BlogPost post={post} related={related} />
     </>

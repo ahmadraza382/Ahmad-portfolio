@@ -37,7 +37,7 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
           </Link>
           <span className="font-mono text-[13px] text-text-2">/ work</span>
         </div>
-        <h1 className="font-serif font-normal leading-[.98] tracking-[-.02em] m-0 text-[clamp(44px,8vw,108px)]">
+        <h1 className="font-heading font-normal leading-[.98] tracking-[-.02em] m-0 text-[clamp(44px,8vw,108px)]">
           Selected <span className="italic text-accent">work</span>
         </h1>
         <p className="mt-[22px] text-text-2 max-w-[48ch] text-[clamp(16px,1.5vw,20px)]">
@@ -54,7 +54,7 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
               key={f}
               onClick={() => pickFilter(f)}
               data-cursor="link"
-              className="py-[10px] px-5 rounded-full font-sans font-semibold text-[14px] cursor-pointer transition-all duration-300"
+              className="py-[10px] px-5 rounded-full font-body font-semibold text-[14px] cursor-pointer transition-all duration-300"
               style={{
                 border: `1px solid ${active ? "var(--accent)" : "var(--border)"}`,
                 background: active ? "var(--accent)" : "transparent",
@@ -114,7 +114,7 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
                     <span className="absolute top-[14px] left-[14px] font-mono text-[11px] text-text-2 z-[2]">
                       [ {proj.shot} ]
                     </span>
-                    <div className="absolute inset-0 flex items-center justify-center font-serif text-accent opacity-20 text-[clamp(70px,10vw,120px)]">
+                    <div className="absolute inset-0 flex items-center justify-center font-heading text-accent opacity-20 text-[clamp(70px,10vw,120px)]">
                       {proj.mark}
                     </div>
                   </>
@@ -133,7 +133,7 @@ export default function WorkGallery({ projects }: { projects: Project[] }) {
                 data-cursor="link"
                 className="flex-1 min-w-0 no-underline"
               >
-                <h3 className="font-serif font-normal text-[26px] leading-[1.1] tracking-[-.01em] m-0 line-clamp-2 text-text transition-colors duration-200 group-hover/proj:text-accent">
+                <h3 className="font-heading font-normal text-[26px] leading-[1.1] tracking-[-.01em] m-0 line-clamp-2 text-text transition-colors duration-200 group-hover/proj:text-accent">
                   {proj.title}
                 </h3>
               </Link>

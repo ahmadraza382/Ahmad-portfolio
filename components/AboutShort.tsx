@@ -1,44 +1,62 @@
 "use client";
 
-import Link from "next/link";
-import SectionLabel from "./SectionLabel";
-import Underline from "./Underline";
+import QuoteButton from "./QuoteButton";
+import SectionBadge from "./SectionBadge";
 
 export default function AboutShort() {
   return (
     <section
       id="about"
-      className="max-w-content mx-auto px-[clamp(20px,5vw,64px)] py-[clamp(60px,10vh,140px)]"
+      className="mx-auto w-[min(1400px,calc(100%-2*clamp(16px,3.5vw,56px)))] py-[clamp(60px,10vh,140px)]"
     >
-      <div data-reveal="" className="mb-[clamp(40px,6vw,72px)]">
-        <div className="mb-[26px]">
-          <SectionLabel no="01" label="About" />
+      {/* ===== reference-style intro: badge + heading | text + CTA ===== */}
+      <div
+        data-reveal=""
+        className="grid gap-[clamp(28px,4vw,72px)] lg:grid-cols-[0.85fr_1.35fr] items-start mb-[clamp(48px,7vw,84px)]"
+      >
+        {/* LEFT: badge + big heading */}
+        <div>
+          <SectionBadge className="mb-6">About Me</SectionBadge>
+          <h2
+            className="m-0 font-heading font-bold leading-[1.06] tracking-[-.02em] text-[clamp(32px,3.6vw,52px)]"
+            style={{ color: "var(--ft-dark)" }}
+          >
+            Built To Be
+            <br />
+            Used, Made
+            <br />
+            To Last
+          </h2>
         </div>
-        <h2 className="font-serif font-normal leading-[1.08] tracking-[-.02em] m-0 mb-6 max-w-[760px] text-[clamp(30px,4.4vw,58px)]">
-          I build it like I&apos;m the one{" "}
-          <span className="relative inline-block italic text-accent">
-            maintaining
-            <Underline variant="short" className="absolute left-0 bottom-[-.16em] w-full h-[.4em]" />
-          </span>{" "}
-          it.
-        </h2>
-        <p className="leading-[1.65] text-text-2 m-0 mb-[22px] text-[clamp(16px,1.4vw,19px)]">
-          I&apos;ve built products people actually use: an English-learning platform
-          with 10,000+ learners, a dental-supplies platform trusted by 12,000+
-          professionals, and a management system a government college runs every day.
-          Frontend and backend, both mine. What I enjoy most is taking something messy
-          and making it simple to use.
-        </p>
-        <Link
-          href="/about"
-          data-cursor="link"
-          className="inline-flex items-center gap-2 text-accent font-semibold text-[16px] no-underline"
-        >
-          More about me <span className="text-[18px]">→</span>
-        </Link>
+
+        {/* RIGHT: bold intro + paragraph + CTA */}
+        <div className="lg:pt-[6px]">
+          <p
+            className="m-0 mb-4 font-bold leading-[1.5] text-[clamp(16px,1.3vw,18px)]"
+            style={{ color: "var(--ft-dark)" }}
+          >
+            I&apos;m a client-focused full-stack developer dedicated to building
+            websites, apps and SaaS products that deliver clear, results-driven value.
+          </p>
+          <p
+            className="m-0 leading-[1.7] text-[clamp(14.5px,1.15vw,16px)]"
+            style={{ color: "var(--ft-gray)" }}
+          >
+            I&apos;ve built products people actually use: an English-learning platform
+            with 10,000+ learners, a dental-supplies platform trusted by 12,000+
+            professionals, and a management system a government college runs every day.
+            Frontend and backend, both mine. What I enjoy most is taking something messy
+            and making it simple to use — because your idea deserves more than code,
+            it deserves craft.
+          </p>
+          <div className="mt-8">
+            <QuoteButton href="/#contact">Get a free quote</QuoteButton>
+          </div>
+        </div>
       </div>
 
-      <div data-reveal="" data-delay="120" className="relative mx-auto max-w-[900px]">
+      {/* ===== intro video (unchanged) ===== */}
+      <div id="intro-video" data-reveal="" data-delay="120" className="relative mx-auto max-w-[900px]">
         <div className="relative rounded-[18px] overflow-hidden bg-soft border border-border" style={{ aspectRatio: "16/9" }}>
           <video
             className="absolute inset-0 w-full h-full object-cover"
@@ -50,13 +68,7 @@ export default function AboutShort() {
             Your browser doesn&apos;t support embedded video.
           </video>
         </div>
-        <div className="absolute bottom-[-18px] left-[-18px] flex items-center gap-[9px] bg-surface border border-border rounded-full py-[10px] px-4 shadow-[0_12px_30px_rgba(0,0,0,.08)]">
-          <span
-            className="w-[9px] h-[9px] rounded-full bg-accent"
-            style={{ animation: "pulsedot 1.8s ease-in-out infinite" }}
-          />
-          <span className="text-[13px] font-semibold">Available for freelance</span>
-        </div>
+         
       </div>
     </section>
   );

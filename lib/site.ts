@@ -1,11 +1,11 @@
 // ============================================================
-// Site-wide constants. Set NEXT_PUBLIC_SITE_URL in production
-// (e.g. https://ahmadraza.com) — used for canonical URLs,
-// Open Graph, sitemap and robots.
+// Site-wide constants. NEXT_PUBLIC_SITE_URL (env) overrides the
+// default below — used for canonical URLs, Open Graph, sitemap
+// and robots. Keep the default in sync with the live domain.
 // ============================================================
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://ahmad-raza-1.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://buildbyraza.site"
 ).replace(/\/+$/, "");
 
 export const SITE_NAME = "Ahmad Raza — Full-Stack Developer";

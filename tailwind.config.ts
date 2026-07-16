@@ -15,16 +15,41 @@ const config: Config = {
         surface: "var(--surface)",
         text: "var(--text)",
         "text-2": "var(--text-2)",
-        accent: "var(--accent)",
+        accent: "var(--accent)",           // Ocean Pine
         "accent-soft": "var(--accent-soft)",
+        gold: "var(--gold)",               // Accent gold
+        "gold-soft": "var(--gold-soft)",
+        charcoal: "var(--charcoal)",       // Dark surface
         border: "var(--border)",
         soft: "var(--soft)",
         sand: "var(--sand)",
+        // Raw brand swatches (exact spec values).
+        brand: {
+          gold: "var(--brand-gold)",
+          text: "var(--brand-text)",
+          light: "var(--brand-light)",
+          dark: "var(--brand-dark)",
+          muted: "var(--brand-muted)",
+          charcoal: "var(--brand-charcoal)",
+          ocean: "var(--brand-ocean)",
+        },
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        // Design system: Unbounded (headings) + Inter (body).
+        heading: ["var(--font-unbounded)", "system-ui", "sans-serif"],
+        body: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         serif: ["var(--font-instrument)", "Georgia", "serif"],
         mono: ["var(--font-jetbrains)", "monospace"],
+      },
+      fontSize: {
+        // Typography scale from the design spec.
+        "display": ["62px", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
+        "h1": ["46px", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        "h2": ["36px", { lineHeight: "1.1", letterSpacing: "-0.01em" }],
+        "h3": ["32px", { lineHeight: "1.15" }],
+        "h4": ["30px", { lineHeight: "1.2" }],
+        "h5": ["26px", { lineHeight: "1.25" }],
       },
       maxWidth: {
         content: "1400px",

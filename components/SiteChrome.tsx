@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Nav from "./Nav";
+import Footer from "./Footer";
+import RouteProgress from "./RouteProgress";
 import { useCursor, useReveal, useMagnetic } from "@/hooks/useInteractions";
 
 const GRAIN =
@@ -25,6 +27,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="relative min-h-screen [overflow-x:clip]">
+      {/* top progress bar on route changes */}
+      <RouteProgress />
       {/* grain */}
       <div
         aria-hidden="true"
@@ -44,6 +48,8 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       />
       <Nav />
       <main>{children}</main>
+      {/* One footer for every public page (admin is returned early above). */}
+      <Footer />
     </div>
   );
 }

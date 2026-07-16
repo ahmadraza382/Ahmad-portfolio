@@ -15,6 +15,8 @@ export interface BlogFormData {
   tags: string[];
   readMinutes: number;
   published: boolean;
+  /** ISO go-live time when scheduled; "" = none. */
+  publishAt: string;
   date: string;
   metaTitle: string;
   metaDescription: string;
@@ -25,9 +27,34 @@ function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+/** ISO → value for <input type="datetime-local"> in the browser's local time. */
+function toLocalInput(iso: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+/** A sensible default schedule: 1 hour from now, local time, for the input. */
+function defaultSchedule(): string {
+  const d = new Date(Date.now() + 60 * 60 * 1000);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+type PubMode = "draft" | "now" | "schedule";
+
+/** Derive the publishing mode from stored fields. */
+function modeOf(published: boolean, publishAt: string): PubMode {
+  if (!published) return "draft";
+  if (publishAt && new Date(publishAt).getTime() > Date.now()) return "schedule";
+  return "now";
+}
+
 const EMPTY: BlogFormData = {
   slug: "", sort: 0, title: "", excerpt: "", cover: "", body: "",
-  tags: [], readMinutes: 0, published: false, date: "",
+  tags: [], readMinutes: 0, published: false, publishAt: "", date: "",
   metaTitle: "", metaDescription: "",
 };
 
@@ -48,7 +75,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Group({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <section className="bg-surface border border-border rounded-[16px] p-6 mb-5">
-      <h2 className="font-serif text-[22px] m-0 mb-1">{title}</h2>
+      <h2 className="font-heading text-[22px] m-0 mb-1">{title}</h2>
       {desc && <p className="text-[13px] text-text-2 m-0 mb-5">{desc}</p>}
       {!desc && <div className="mb-5" />}
       {children}
@@ -113,10 +140,22 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
   const [data, setData] = useState<BlogFormData>(
     initial ?? { ...EMPTY, date: today() }
   );
+  // Publishing state: mode + the datetime-local input value (local time).
+  const [mode, setMode] = useState<PubMode>(
+    modeOf(initial?.published ?? false, initial?.publishAt ?? "")
+  );
+  const [scheduleLocal, setScheduleLocal] = useState<string>(
+    initial?.publishAt ? toLocalInput(initial.publishAt) : ""
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imgError, setImgError] = useState<string | null>(null);
   const isEdit = Boolean(initial?.id);
+
+  const pickMode = (m: PubMode) => {
+    setMode(m);
+    if (m === "schedule" && !scheduleLocal) setScheduleLocal(defaultSchedule());
+  };
 
   const set = <K extends keyof BlogFormData>(k: K, v: BlogFormData[K]) =>
     setData((d) => ({ ...d, [k]: v }));
@@ -126,6 +165,30 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Resolve publishing state from the mode.
+    let published = false;
+    let publish_at: string | null = null;
+    if (mode === "now") {
+      published = true;
+    } else if (mode === "schedule") {
+      if (!scheduleLocal) {
+        setError("Schedule ke liye ek date & time chuno.");
+        return;
+      }
+      const when = new Date(scheduleLocal);
+      if (Number.isNaN(when.getTime())) {
+        setError("Schedule time galat hai.");
+        return;
+      }
+      if (when.getTime() <= Date.now()) {
+        setError("Schedule time future mein honi chahiye (ya 'Publish now' use karo).");
+        return;
+      }
+      published = true;
+      publish_at = when.toISOString();
+    }
+
     setBusy(true);
     setError(null);
 
@@ -139,7 +202,8 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
       body: data.body,
       tags: data.tags,
       read_minutes: data.readMinutes,
-      published: data.published,
+      published,
+      publish_at,
       date: data.date || today(),
       meta_title: data.metaTitle,
       meta_description: data.metaDescription,
@@ -212,15 +276,52 @@ export default function BlogForm({ initial }: { initial?: BlogFormData }) {
           </Field>
         </div>
 
-        <label className="flex items-center gap-3 mt-5 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={data.published}
-            onChange={(e) => set("published", e.target.checked)}
-            className="w-[18px] h-[18px] accent-[var(--accent)]"
-          />
-          <span className="text-[14px] font-semibold">Published (visible on the public blog)</span>
-        </label>
+        <div className="mt-6">
+          <span className={labelText}>Publishing</span>
+          <div className="mt-2 inline-flex rounded-[10px] border border-border overflow-hidden">
+            {(
+              [
+                ["draft", "Draft"],
+                ["now", "Publish now"],
+                ["schedule", "Schedule"],
+              ] as [PubMode, string][]
+            ).map(([m, label]) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => pickMode(m)}
+                className={`px-4 py-[10px] text-[13px] font-semibold cursor-pointer border-none transition-colors ${
+                  mode === m ? "bg-accent text-white" : "bg-bg text-text-2 hover:bg-soft"
+                }`}
+                style={{ borderRight: m !== "schedule" ? "1px solid var(--border)" : "none" }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {mode === "schedule" && (
+            <div className="mt-3 max-w-[320px]">
+              <Field label="Publish at (your local time)">
+                <input
+                  type="datetime-local"
+                  className={input}
+                  value={scheduleLocal}
+                  onChange={(e) => setScheduleLocal(e.target.value)}
+                />
+              </Field>
+            </div>
+          )}
+
+          <p className="text-[12px] text-text-2 mt-2 m-0">
+            {mode === "draft" && "Draft — public blog par nahi dikhegi."}
+            {mode === "now" && "Save karte hi live ho jayegi."}
+            {mode === "schedule" &&
+              (scheduleLocal
+                ? `Scheduled — ${new Date(scheduleLocal).toLocaleString()} par live hogi (±5 min).`
+                : "Ek date & time chuno.")}
+          </p>
+        </div>
       </Group>
 
       <Group

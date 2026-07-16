@@ -3,9 +3,10 @@ import AboutShort from "@/components/AboutShort";
 import Services from "@/components/Services";
 import Skills from "@/components/Skills";
 import FeaturedWork from "@/components/FeaturedWork";
+import Process from "@/components/Process";
+import Faq from "@/components/Faq";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
 import { getFeaturedProjects } from "@/lib/projects";
 
 // Cached (ISR) for speed; admin edits trigger revalidatePath("/") so they
@@ -21,9 +22,10 @@ export default async function HomePage() {
       <Services />
       <Skills />
       <FeaturedWork featured={featured} />
+      <Process />
       <Testimonials />
+      <Faq />
       <Contact />
-      <Footer />
     </>
   );
 }

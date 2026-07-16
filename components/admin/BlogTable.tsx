@@ -10,6 +10,15 @@ export interface AdminBlogRow {
   title: string;
   date: string;
   published: boolean;
+  /** ISO scheduled go-live; "" = none. */
+  publishAt?: string;
+}
+
+/** draft | scheduled | published — from the stored fields. */
+function statusOf(p: AdminBlogRow): "draft" | "scheduled" | "published" {
+  if (!p.published) return "draft";
+  if (p.publishAt && new Date(p.publishAt).getTime() > Date.now()) return "scheduled";
+  return "published";
 }
 
 export default function BlogTable({ rows }: { rows: AdminBlogRow[] }) {
@@ -47,18 +56,20 @@ export default function BlogTable({ rows }: { rows: AdminBlogRow[] }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[15px] truncate">{p.title}</span>
-              {p.published ? (
-                <span className="text-[11px] font-mono px-2 py-[2px] rounded-full bg-accent-soft text-accent">
-                  published
-                </span>
-              ) : (
-                <span className="text-[11px] font-mono px-2 py-[2px] rounded-full bg-soft text-text-2 border border-border">
-                  draft
-                </span>
-              )}
+              {(() => {
+                const s = statusOf(p);
+                if (s === "published")
+                  return <span className="text-[11px] font-mono px-2 py-[2px] rounded-full bg-accent-soft text-accent">published</span>;
+                if (s === "scheduled")
+                  return <span className="text-[11px] font-mono px-2 py-[2px] rounded-full" style={{ background: "var(--gold-soft)", color: "var(--gold)" }}>scheduled</span>;
+                return <span className="text-[11px] font-mono px-2 py-[2px] rounded-full bg-soft text-text-2 border border-border">draft</span>;
+              })()}
             </div>
             <div className="text-[12px] text-text-2 font-mono mt-[2px]">
-              /{p.slug}{p.date ? ` · ${p.date}` : ""}
+              /{p.slug}
+              {statusOf(p) === "scheduled" && p.publishAt
+                ? ` · goes live ${new Date(p.publishAt).toLocaleString()}`
+                : p.date ? ` · ${p.date}` : ""}
             </div>
           </div>
           <Link

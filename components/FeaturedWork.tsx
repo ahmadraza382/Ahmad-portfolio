@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import SectionLabel from "./SectionLabel";
+import SectionBadge from "./SectionBadge";
+import QuoteButton from "./QuoteButton";
 import type { Project } from "@/lib/data";
 
 export default function FeaturedWork({ featured }: { featured: Project[] }) {
@@ -11,28 +12,22 @@ export default function FeaturedWork({ featured }: { featured: Project[] }) {
   return (
     <section
       id="work"
-      className="max-w-content mx-auto px-[clamp(20px,5vw,64px)] py-[clamp(60px,10vh,140px)]"
+      className="mx-auto w-[min(1400px,calc(100%-2*clamp(16px,3.5vw,56px)))] py-[clamp(60px,10vh,140px)]"
     >
       <div
         data-reveal=""
         className="flex items-end justify-between flex-wrap gap-5 mb-[clamp(40px,5vw,72px)]"
       >
         <div>
-          <div className="mb-[18px]">
-            <SectionLabel no="04" label="Selected work" />
-          </div>
-          <h2 className="font-serif font-normal leading-[1.02] tracking-[-.02em] m-0 text-[clamp(32px,5vw,66px)]">
-            Things I&apos;ve shipped
+          <SectionBadge className="mb-5">Selected Work</SectionBadge>
+          <h2
+            className="font-heading m-0 font-bold leading-[1.05] tracking-[-.02em] text-[clamp(32px,3.6vw,52px)]"
+            style={{ color: "var(--ft-dark)" }}
+          >
+            Things I&apos;ve <span style={{ color: "var(--ft-gold)" }}>Shipped</span>
           </h2>
         </div>
-        <button
-          onClick={() => router.push("/work")}
-          data-cursor="cta"
-          data-magnetic=""
-          className="inline-flex items-center gap-2 py-[13px] px-[22px] rounded-full border-none bg-accent text-white font-sans font-semibold text-[15px] cursor-pointer"
-        >
-          View all work →
-        </button>
+        <QuoteButton href="/work">View all work</QuoteButton>
       </div>
 
       <div className="flex flex-col gap-[clamp(28px,4vw,56px)]">
@@ -54,8 +49,8 @@ export default function FeaturedWork({ featured }: { featured: Project[] }) {
             >
               <div className={`grid grid-cols-1 ${cols} gap-[clamp(20px,3vw,44px)] items-center`}>
                 <div
-                  className={`group/proj proj-media relative rounded-[18px] overflow-hidden border border-border ${mediaOrder}`}
-                  style={{ aspectRatio: "16/9", background: proj.bg }}
+                  className={`group/proj proj-media relative rounded-[18px] overflow-hidden border ${mediaOrder}`}
+                  style={{ aspectRatio: "16/9", background: proj.bg, borderColor: "rgba(21,36,47,0.12)" }}
                 >
                   {proj.cover ? (
                     <Image
@@ -69,39 +64,49 @@ export default function FeaturedWork({ featured }: { featured: Project[] }) {
                     />
                   ) : (
                     <>
-                      <span className="absolute top-4 left-4 font-mono text-[11px] text-text-2 tracking-[.08em] z-[2]">
+                      <span className="absolute top-4 left-4 text-[11px] tracking-[.08em] z-[2]" style={{ color: "var(--ft-gray)" }}>
                         [ {proj.shot} ]
                       </span>
-                      <div className="absolute inset-0 flex items-center justify-center font-serif text-accent opacity-20 text-[clamp(60px,9vw,140px)]">
+                      <div
+                        className="font-heading absolute inset-0 flex items-center justify-center font-bold opacity-20 text-[clamp(60px,9vw,140px)]"
+                        style={{ color: "var(--ft-gold)" }}
+                      >
                         {proj.mark}
                       </div>
                     </>
                   )}
-                  <div className="proj-overlay absolute inset-0 bg-accent opacity-0 group-hover/proj:opacity-90 flex items-center justify-center">
+                  <div
+                    className="proj-overlay absolute inset-0 opacity-0 group-hover/proj:opacity-100 flex items-center justify-center"
+                    style={{ background: "rgba(21,36,47,0.88)" }}
+                  >
                     <span className="text-white font-semibold text-[17px] inline-flex items-center gap-2">
-                      View case study <span className="text-[19px]">↗</span>
+                      View case study <span className="text-[19px]" style={{ color: "var(--ft-gold)" }}>↗</span>
                     </span>
                   </div>
                 </div>
 
                 <div className={textOrder}>
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="font-mono text-[13px] text-accent">{proj.no}</span>
-                    <span className="font-mono text-[12px] text-text-2 uppercase tracking-[.14em]">
+                    <span className="text-[13px] font-bold" style={{ color: "var(--ft-gold)" }}>{proj.no}</span>
+                    <span className="text-[12px] uppercase tracking-[.14em] font-semibold" style={{ color: "var(--ft-gray)" }}>
                       {proj.category}
                     </span>
                   </div>
-                  <h3 className="font-serif font-normal leading-[1.04] tracking-[-.01em] m-0 mb-[14px] text-[clamp(28px,3.6vw,46px)]">
+                  <h3
+                    className="font-heading m-0 mb-[14px] font-bold leading-[1.08] tracking-[-.01em] text-[clamp(26px,3vw,40px)]"
+                    style={{ color: "var(--ft-dark)" }}
+                  >
                     {proj.title}
                   </h3>
-                  <p className="text-[15px] leading-[1.6] text-text-2 m-0 mb-5 max-w-[46ch]">
+                  <p className="text-[15px] leading-[1.65] m-0 mb-5 max-w-[46ch]" style={{ color: "var(--ft-gray)" }}>
                     {proj.blurb}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {proj.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[12px] font-mono text-text-2 border border-border rounded-full py-[5px] px-3"
+                        className="text-[12px] font-semibold rounded-full py-[5px] px-3 border"
+                        style={{ color: "var(--ft-gray)", borderColor: "rgba(21,36,47,0.18)" }}
                       >
                         {tag}
                       </span>

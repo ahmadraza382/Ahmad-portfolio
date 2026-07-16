@@ -203,12 +203,12 @@ export const TIMELINE: TimelineEntry[] = [
   },
   {
     year: "2023—24",
-    role: "MERN Stack Diploma · SMIT",
+    role: "MERN Stack Course · SMIT",
     desc: "Where it really started. A one-year web and mobile development course at Saylani Mass IT Training, alongside my degree — learned the MERN stack by building real projects, and knew this was what I wanted to do.",
   },
   {
     year: "2022—26",
-    role: "BS Computer Science · GCU Faisalabad",
+    role: "BS Computer Science · GCUF",
     desc: "CGPA 3.5/4.0. My final-year project, a college management system, now runs in production at a government college. Also taught DSA at iCodeGuru and competed in hackathons (Harvard CS50x, UC Berkeley Calico, lablab.ai).",
   },
 ];
@@ -481,6 +481,8 @@ export interface BlogPost {
   /** Estimated read time in minutes; 0 = auto-estimate from body length. */
   readMinutes: number;
   published: boolean;
+  /** Scheduled go-live (ISO). Blank/undefined = publish immediately once `published`. */
+  publishAt?: string;
   /** Display date, e.g. "2026-02-14". */
   date: string;
   /** SEO <title> override — blank falls back to `title`. */

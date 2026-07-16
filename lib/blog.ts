@@ -20,6 +20,7 @@ interface DbBlogPost {
   tags: string[] | null;
   read_minutes: number | null;
   published: boolean;
+  publish_at: string | null;
   date: string;
   meta_title: string | null;
   meta_description: string | null;
@@ -36,10 +37,26 @@ function fromDb(r: DbBlogPost): BlogPost {
     tags: r.tags ?? [],
     readMinutes: r.read_minutes ?? 0,
     published: r.published,
+    publishAt: r.publish_at ?? "",
     date: r.date ?? "",
     metaTitle: r.meta_title ?? "",
     metaDescription: r.meta_description ?? "",
   };
+}
+
+/**
+ * Is this post publicly visible right now? True only when it's published AND
+ * either has no scheduled time or that time has already passed. This is the
+ * single source of truth used by the list, the post page and the sitemap.
+ * Note: evaluated at render/ISR-regeneration time (see `revalidate` on the
+ * public pages), so a scheduled post appears within that window of its time.
+ */
+export function isLive(post: BlogPost): boolean {
+  if (!post.published) return false;
+  if (!post.publishAt) return true;
+  const t = new Date(post.publishAt).getTime();
+  if (Number.isNaN(t)) return true; // bad/blank timestamp → treat as immediate
+  return t <= Date.now();
 }
 
 /** All posts (published + drafts), ordered. Supabase if available, else samples. */
@@ -59,9 +76,9 @@ export async function getAllPosts(): Promise<BlogPost[]> {
   }
 }
 
-/** Only published posts — for the public /blog pages. */
+/** Only posts that are live right now (published + schedule elapsed) — public pages. */
 export async function getPublishedPosts(): Promise<BlogPost[]> {
-  return (await getAllPosts()).filter((p) => p.published);
+  return (await getAllPosts()).filter(isLive);
 }
 
 /** A single post by slug (published or not — the page decides). */

@@ -18,7 +18,7 @@ export default function Icon() {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: "50%",
-          background: "#1f6e5a",
+          background: "#356469",
           color: "#ffffff",
           fontSize: 42,
           fontFamily: "Georgia, serif",

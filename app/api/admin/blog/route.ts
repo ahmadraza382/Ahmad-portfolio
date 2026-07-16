@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 // DB column names (note read_minutes is snake_case in Postgres).
 const FIELDS = [
   "slug", "sort", "title", "excerpt", "cover", "body",
-  "tags", "read_minutes", "published", "date",
+  "tags", "read_minutes", "published", "publish_at", "date",
   "meta_title", "meta_description",
 ];
 

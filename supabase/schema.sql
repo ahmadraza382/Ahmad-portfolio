@@ -75,7 +75,8 @@ create table if not exists blog_posts (
   body              text not null default '',        -- rich-text HTML content
   tags              text[] not null default '{}',
   read_minutes      int  not null default 0,          -- 0 = auto-estimate from body
-  published         boolean not null default false,   -- only published posts show publicly
+  published         boolean not null default false,   -- gate: unpublished never shows
+  publish_at        timestamptz,                       -- scheduled go-live; null = immediate. Post is public only when published AND (publish_at is null OR publish_at <= now())
   date              text not null default '',         -- display date, e.g. "2026-02-14"
   meta_title        text not null default '',         -- SEO <title> override (blank = use title)
   meta_description  text not null default '',         -- SEO meta description (blank = use excerpt)
@@ -85,6 +86,7 @@ create table if not exists blog_posts (
 -- If the table already exists from an earlier version, add the new columns:
 alter table blog_posts add column if not exists meta_title text not null default '';
 alter table blog_posts add column if not exists meta_description text not null default '';
+alter table blog_posts add column if not exists publish_at timestamptz;
 
 -- Contact form submissions
 create table if not exists contact_messages (

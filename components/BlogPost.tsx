@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import Footer from "./Footer";
 import { sanitizeHtml } from "@/lib/richtext";
 import type { BlogPost as Post } from "@/lib/data";
 
@@ -33,7 +32,7 @@ export default function BlogPost({ post, related = [] }: { post: Post; related?:
 
         <h1
           data-reveal=""
-          className="font-serif font-normal leading-[1.02] tracking-[-.02em] m-0 mb-[26px] text-[clamp(36px,6vw,72px)]"
+          className="font-heading font-normal leading-[1.02] tracking-[-.02em] m-0 mb-[26px] text-[clamp(36px,6vw,72px)]"
         >
           {post.title}
         </h1>
@@ -88,7 +87,7 @@ export default function BlogPost({ post, related = [] }: { post: Post; related?:
       {related.length > 0 && (
         <section className="max-w-content mx-auto px-[clamp(20px,5vw,64px)] pb-[90px]">
           <div data-reveal="" className="pt-10 border-t border-border">
-            <h2 className="font-serif font-normal text-[clamp(24px,3vw,34px)] m-0 mb-8">
+            <h2 className="font-heading font-normal text-[clamp(24px,3vw,34px)] m-0 mb-8">
               Keep reading
             </h2>
             <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[clamp(20px,3vw,36px)]">
@@ -123,7 +122,7 @@ export default function BlogPost({ post, related = [] }: { post: Post; related?:
                       {formatDate(r.date)}
                     </span>
                   )}
-                  <h3 className="font-serif font-normal text-[22px] leading-[1.15] tracking-[-.01em] m-0 text-text transition-colors group-hover/rel:text-accent">
+                  <h3 className="font-heading font-normal text-[22px] leading-[1.15] tracking-[-.01em] m-0 text-text transition-colors group-hover/rel:text-accent">
                     {r.title}
                   </h3>
                 </Link>
@@ -132,8 +131,6 @@ export default function BlogPost({ post, related = [] }: { post: Post; related?:
           </div>
         </section>
       )}
-
-      <Footer />
     </>
   );
 }

@@ -2,30 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   DESIGN SYSTEM — brand palette (from the design spec)
+   Main Colors:
+     Accent (Gold)  #C8A450    Text (dark)    #555555
+     Light          #FFFFFF    Dark           #000000
+     Text (muted)   #EAEAEA    Charcoal       #15242E
+     Ocean Pine     #356469  (primary brand)
+   ------------------------------------------------------------
+   Raw brand tokens — reference these when you need the exact
+   swatch; semantic tokens below map them to roles.
+   ============================================================ */
+:root {
+  --brand-gold: #c8a450;
+  --brand-text: #555555;
+  --brand-light: #ffffff;
+  --brand-dark: #000000;
+  --brand-muted: #eaeaea;
+  --brand-charcoal: #15242e;
+  --brand-ocean: #356469;
+}
+
 :root {
   --bg: #fcfcfa;
-  --surface: #ffffff;
-  --text: #16190f;
-  --text-2: #6b7060;
-  --accent: #1f6e5a;
-  --accent-soft: #1f6e5a18;
-  --border: #e4e0d3;
-  --soft: #eee9dc;
-  --sand: #e7e1d2;
+  --surface: #ffffff;               /* Light */
+  --text: #15242e;                  /* Charcoal — primary text */
+  --text-2: #555555;                /* Text (muted body copy) */
+  --accent: #356469;                /* Ocean Pine — primary brand */
+  --accent-soft: #35646918;
+  --gold: #c8a450;                  /* Accent gold — secondary highlight */
+  --gold-soft: #c8a45020;
+  --charcoal: #15242e;              /* Dark surfaces */
+  --border: #eaeaea;                /* Muted */
+  --soft: #f2f4f3;
+  --sand: #eaeaea;
   --grain: 0.04;
 }
 
-[data-theme="dark"] {
-  --bg: #13160f;
-  --surface: #1c2016;
-  --text: #ecefe3;
-  --text-2: #99a08c;
-  --accent: #3e9b7e;
-  --accent-soft: #3e9b7e22;
-  --border: #2a2e22;
-  --soft: #232719;
-  --sand: #232719;
-  --grain: 0.06;
+/* ===== Footer / dark-surface palette (theme-independent) =====
+   Kept as --ft-* aliases so existing footer/hero markup keeps working;
+   values now come from the brand palette above. */
+:root {
+  --ft-dark: #15242e;      /* Charcoal */
+  --ft-light: #356469;     /* Ocean Pine */
+  --ft-gold: #c8a450;      /* Accent gold */
+  --ft-gray: #555555;      /* Text */
+  --ft-white: #ffffff;     /* Light */
+  --ft-black: #000000;     /* Dark */
 }
 
 * {
@@ -40,10 +63,16 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-manrope), system-ui, sans-serif;
+  /* Body typeface — Inter (design system) */
+  font-family: var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   transition: background 0.6s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Heading typeface — Unbounded (design system) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-unbounded), system-ui, sans-serif;
 }
 
 ::selection {
@@ -205,8 +234,8 @@ a.text-accent:hover {
    ============================================================ */
 .prose-editor h2,
 .blog-content h2 {
-  font-family: var(--font-instrument), Georgia, serif;
-  font-weight: 400;
+  font-family: var(--font-unbounded), system-ui, sans-serif;
+  font-weight: 500;
   font-size: clamp(24px, 3vw, 32px);
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -214,8 +243,8 @@ a.text-accent:hover {
 }
 .prose-editor h3,
 .blog-content h3 {
-  font-family: var(--font-instrument), Georgia, serif;
-  font-weight: 400;
+  font-family: var(--font-unbounded), system-ui, sans-serif;
+  font-weight: 500;
   font-size: clamp(20px, 2.4vw, 25px);
   line-height: 1.2;
   margin: 1.3em 0 0.4em;

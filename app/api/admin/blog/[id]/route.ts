@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 const FIELDS = [
   "slug", "sort", "title", "excerpt", "cover", "body",
-  "tags", "read_minutes", "published", "date",
+  "tags", "read_minutes", "published", "publish_at", "date",
   "meta_title", "meta_description",
 ];
 

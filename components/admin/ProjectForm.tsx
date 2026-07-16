@@ -138,7 +138,7 @@ function CategoriesDropdown({
 function Group({ title, desc, children }: { title: string; desc?: string; children: React.ReactNode }) {
   return (
     <section className="bg-surface border border-border rounded-[16px] p-6 mb-5">
-      <h2 className="font-serif text-[22px] m-0 mb-1">{title}</h2>
+      <h2 className="font-heading text-[22px] m-0 mb-1">{title}</h2>
       {desc && <p className="text-[13px] text-text-2 m-0 mb-5">{desc}</p>}
       {!desc && <div className="mb-5" />}
       {children}

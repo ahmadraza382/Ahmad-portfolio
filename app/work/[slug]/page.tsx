@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CaseStudy from "@/components/CaseStudy";
 import { getProjectBySlug, getNextProjectAfter } from "@/lib/projects";
+import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -42,5 +43,37 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
     return null;
   }
   const next = await getNextProjectAfter(params.slug);
-  return <CaseStudy project={project} next={next} />;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.summary,
+    url: `${SITE_URL}/work/${project.slug}`,
+    ...(project.cover ? { image: project.cover } : {}),
+    creator: { "@type": "Person", name: "Ahmad Raza", url: SITE_URL },
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
+      { "@type": "ListItem", position: 3, name: project.title, item: `${SITE_URL}/work/${project.slug}` },
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <CaseStudy project={project} next={next} />
+    </>
+  );
 }
