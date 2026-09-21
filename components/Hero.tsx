@@ -19,13 +19,13 @@ export default function Hero() {
   return (
     <section className=" ">
       <div
-        className="relative overflow-hidden rounded-[clamp(20px,3vw,38px)] text-white"
+        className="relative overflow-hidden rounded-[clamp(px,3vw,38px)] text-white"
         style={{ background: "var(--ft-dark)" }}
       >
         {/* teal glow + gradient depth */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 p-4" 
+          className="absolute inset-0 p-4"
           style={{
             background:
               "radial-gradient(120% 90% at 60% 35%, rgba(36,66,74,0.75) 0%, rgba(21,36,47,0) 55%), linear-gradient(180deg, #15242f 0%, #16283190 40%, #15242f 100%)",
@@ -90,7 +90,7 @@ export default function Hero() {
                     alt="Ahmad Raza — Full-Stack Developer"
                     fill
                     priority
-                    sizes="360px"
+                    sizes="560px"
                     className="object-cover object-top [-webkit-mask-image:radial-gradient(120%_100%_at_50%_40%,#000_62%,transparent_92%)] [mask-image:radial-gradient(120%_100%_at_50%_40%,#000_62%,transparent_92%)]"
                   />
                 </div>

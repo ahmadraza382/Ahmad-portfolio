@@ -85,7 +85,6 @@ export default function Nav() {
             <Link href="/work" data-cursor="link" className={navLinkCls}>Work</Link>
             <Link href="/about" data-cursor="link" className={navLinkCls}>About</Link>
             <a href="#services" onClick={goSection("services")} data-cursor="link" className={navLinkCls}>Services</a>
-            <Link href="/blog" data-cursor="link" className={navLinkCls}>Blog</Link>
             <a href="#contact" onClick={goSection("contact")} data-cursor="link" className={navLinkCls}>Contact</a>
           </div>
 
@@ -142,9 +141,7 @@ export default function Nav() {
         <Link href="/work" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-white/10`}>
           Work <span className="text-gold text-[20px]">↗</span>
         </Link>
-        <Link href="/blog" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-white/10`}>
-          Blog <span className="text-gold text-[20px]">↗</span>
-        </Link>
+
         <Link href="/about" onClick={closeAnd()} data-cursor="link" className={`${mobileLinkCls} border-b border-white/10`}>
           About <span className="text-gold text-[20px]">↗</span>
         </Link>

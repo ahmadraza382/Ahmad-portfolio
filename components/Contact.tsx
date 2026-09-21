@@ -123,7 +123,7 @@ export default function Contact() {
             aria-hidden="true"
             loading="lazy"
             draggable={false}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-top"
           />
           <span
             aria-hidden="true"
