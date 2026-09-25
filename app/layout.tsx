@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Manrope, JetBrains_Mono, Poppins, Sen, Unbounded, Inter } from "next/font/google";
+import { Instrument_Serif, JetBrains_Mono, Unbounded, Inter } from "next/font/google";
 import SiteChrome from "@/components/SiteChrome";
 import {
   SITE_URL,
@@ -27,13 +27,6 @@ const inter = Inter({
   display: "swap",
 });
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
 const instrument = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
@@ -46,21 +39,6 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-jetbrains",
-  display: "swap",
-});
-
-// Footer typography (reference-style): Poppins for headings/wordmark, Sen for body.
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-poppins",
-  display: "swap",
-});
-
-const sen = Sen({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800"],
-  variable: "--font-sen",
   display: "swap",
 });
 
@@ -154,7 +132,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
-      <body className={`${unbounded.variable} ${inter.variable} ${manrope.variable} ${instrument.variable} ${jetbrains.variable} ${poppins.variable} ${sen.variable}`}>
+      <body className={`${unbounded.variable} ${inter.variable} ${instrument.variable} ${jetbrains.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

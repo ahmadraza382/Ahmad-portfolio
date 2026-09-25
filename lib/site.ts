@@ -5,7 +5,7 @@
 // ============================================================
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://buildbyraza.site"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://buildbyraza.me"
 ).replace(/\/+$/, "");
 
 export const SITE_NAME = "Ahmad Raza — Full-Stack Developer";
@@ -13,6 +13,6 @@ export const SITE_NAME = "Ahmad Raza — Full-Stack Developer";
 export const SITE_DESCRIPTION =
   "Full-stack developer from Faisalabad, Pakistan. Websites, mobile apps, online stores, SaaS products, WordPress, SEO and Meta ads — from first idea to launch.";
 
-export const CONTACT_EMAIL = "382ahmadraza@gmail.com";
+export const CONTACT_EMAIL = "ahmad@buildbyraza.me";
 export const GITHUB_URL = "https://github.com/ahmadraza382";
-export const LINKEDIN_URL = "https://www.linkedin.com/in/ahmadraza161/";
+export const LINKEDIN_URL = "https://www.linkedin.com/in/ahmadraza382/";

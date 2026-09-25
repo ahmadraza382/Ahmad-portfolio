@@ -136,7 +136,7 @@ export default function AboutPage() {
           Let&apos;s work together →
         </button>
         <a
-          href="https://www.linkedin.com/in/ahmadraza161/"
+          href="https://www.linkedin.com/in/ahmadraza382/"
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="link"

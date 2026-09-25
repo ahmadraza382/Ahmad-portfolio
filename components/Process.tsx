@@ -133,7 +133,9 @@ export default function Process() {
           </svg>
 
           {/* ===== desktop: floating compact cards ===== */}
-          <div className="hidden lg:block">
+          {/* `peer`/`has-[:hover]` combo: the first card stays open by default and
+              closes as soon as any other card is hovered. */}
+          <div className="hidden lg:block group/steps">
             {STEPS.map((s, i) => (
               <div
                 key={s.no}
@@ -146,7 +148,7 @@ export default function Process() {
                   className="absolute -top-[34px] left-[10px] w-[22px] h-[22px] rounded-full z-[2]"
                   style={{ background: "var(--ft-gold)", border: "6px solid rgba(96,110,117,0.95)" }}
                 />
-                <StepCard s={s} />
+                <StepCard s={s} defaultOpen={i === 0} />
               </div>
             ))}
           </div>
@@ -168,21 +170,33 @@ export default function Process() {
 function StepCard({
   s,
   alwaysDesc = false,
+  defaultOpen = false,
 }: {
   s: (typeof STEPS)[number];
   alwaysDesc?: boolean;
+  defaultOpen?: boolean;
 }) {
-  const darkText = "text-[#15242F] lg:group-hover:text-white";
+  // When `defaultOpen`, the card renders in its hover (dark) state, and reverts
+  // to white as soon as the viewer hovers any other card in the row
+  // (`group-has-[...]/steps` = "some card in the row is hovered").
+  const idle = "lg:group-has-[.group:hover]/steps:";
+
   return (
     <div
       className={
-        "group relative overflow-hidden rounded-2xl p-5 transition-shadow duration-300 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)] lg:group-hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),inset_0_0_80px_rgba(0,0,0,1)] bg-white"
+        "group relative overflow-hidden rounded-2xl p-5 transition-shadow duration-300 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)] bg-white " +
+        "lg:group-hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),inset_0_0_80px_rgba(0,0,0,1)] " +
+        (defaultOpen
+          ? "lg:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),inset_0_0_80px_rgba(0,0,0,1)] " +
+            `${idle}shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]`
+          : "")
       }
     >
       {/* bg image (faint) + solid-reading dark wash — fills the whole card on hover */}
       <div
         className={
-          "absolute inset-0 z-0 transition-opacity duration-300 pointer-events-none opacity-0 lg:group-hover:opacity-100"
+          "absolute inset-0 z-0 transition-opacity duration-300 pointer-events-none opacity-0 lg:group-hover:opacity-100 " +
+          (defaultOpen ? `lg:opacity-100 ${idle}opacity-0` : "")
         }
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -199,13 +213,21 @@ function StepCard({
 
       <div className="relative z-[1] flex items-start justify-between gap-3">
         <span
-          className="font-heading font-extrabold leading-none text-[30px] tracking-[-.02em] transition-colors duration-300 text-[#15242F] lg:group-hover:text-gold"
+          className={
+            "font-heading font-extrabold leading-none text-[30px] tracking-[-.02em] transition-colors duration-300 text-[#15242F] " +
+            (defaultOpen ? `lg:text-gold ${idle}text-[#15242F] ` : "") +
+            "lg:group-hover:text-gold"
+          }
         >
           {s.no}
         </span>
         <span
           className={
-            "inline-flex items-center justify-center w-[38px] h-[38px] rounded-full shrink-0 transition-colors duration-300 text-gold border border-gold/55 lg:group-hover:bg-gray-800 lg:group-hover:border-white/25 lg:group-hover:text-white"
+            "inline-flex items-center justify-center w-[38px] h-[38px] rounded-full shrink-0 transition-colors duration-300 text-gold border border-gold/55 " +
+            (defaultOpen
+              ? `lg:bg-gray-800 lg:border-white/25 lg:text-white ${idle}bg-transparent ${idle}border-gold/55 ${idle}text-gold `
+              : "") +
+            "lg:group-hover:bg-gray-800 lg:group-hover:border-white/25 lg:group-hover:text-white"
           }
         >
           {s.icon}
@@ -213,7 +235,10 @@ function StepCard({
       </div>
 
       <h3
-        className={`relative z-[1] m-0 mt-7 font-heading font-bold leading-[1.15] text-[19px] tracking-[-.01em] transition-colors duration-300 ${darkText}`}
+        className={
+          "relative z-[1] m-0 mt-7 font-heading font-bold leading-[1.15] text-[19px] tracking-[-.01em] transition-colors duration-300 text-[#15242F] lg:group-hover:text-white " +
+          (defaultOpen ? "lg:text-white" : "")
+        }
       >
         {s.title}
       </h3>
@@ -223,12 +248,14 @@ function StepCard({
           "relative z-[1] " +
           (alwaysDesc
             ? ""
-            : "overflow-hidden transition-all duration-300 lg:max-h-0 lg:opacity-0 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100")
+            : "overflow-hidden transition-all duration-300 lg:max-h-0 lg:opacity-0 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100 " +
+              (defaultOpen ? "lg:max-h-[150px] lg:opacity-100" : ""))
         }
       >
         <p
           className={
-            "m-0 mt-3 text-[13px] leading-[1.55] font-semibold text-[#555555] transition-colors duration-300 lg:group-hover:text-white"
+            "m-0 mt-3 text-[13px] leading-[1.55] font-semibold text-[#555555] transition-colors duration-300 lg:group-hover:text-white " +
+            (defaultOpen ? "lg:text-white" : "")
           }
         >
           {s.desc}
