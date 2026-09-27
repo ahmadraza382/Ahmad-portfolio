@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Instrument_Serif, JetBrains_Mono, Unbounded, Inter } from "next/font/google";
 import SiteChrome from "@/components/SiteChrome";
 import {
@@ -133,6 +134,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </noscript>
       </head>
       <body className={`${unbounded.variable} ${inter.variable} ${instrument.variable} ${jetbrains.variable}`}>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-TWL3T8CSLY"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TWL3T8CSLY');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
