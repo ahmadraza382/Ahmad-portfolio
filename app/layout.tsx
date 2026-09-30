@@ -10,6 +10,7 @@ import {
   GITHUB_URL,
   LINKEDIN_URL,
 } from "@/lib/site";
+import { SERVICE_PAGES } from "@/lib/services-content";
 import "./globals.css";
 
 // ===== Design-system fonts =====
@@ -45,46 +46,73 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+
   title: {
-    default: SITE_NAME,
-    template: "%s — Ahmad Raza",
+    default: "Ahmad Raza | Software Engineer & Digital Solutions",
+    template: "%s | Ahmad Raza",
   },
-  description: SITE_DESCRIPTION,
-  keywords: [
-    "Full-Stack Developer",
-    "Web Development",
-    "Mobile App Development",
-    "SaaS Development",
-    "E-commerce",
-    "Shopify",
-    "WordPress",
-    "SEO",
-    "Meta Ads",
-    "React",
-    "Next.js",
-    "Faisalabad",
-    "Pakistan",
+
+  description:
+    "Ahmad Raza is a Software Engineer from Faisalabad, Pakistan, providing web development, mobile app development, AI solutions, custom software, SEO, and UI/UX services for businesses worldwide.",
+
+  authors: [
+    {
+      name: "Ahmad Raza",
+      url: SITE_URL,
+    },
   ],
-  authors: [{ name: "Ahmad Raza", url: SITE_URL }],
+
   creator: "Ahmad Raza",
-  alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
-  // Set GOOGLE_SITE_VERIFICATION in env to verify ownership in Search Console.
+  publisher: "Ahmad Raza",
+
+  alternates: {
+    canonical: "/",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
   ...(process.env.GOOGLE_SITE_VERIFICATION
-    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    ? {
+        verification: {
+          google: process.env.GOOGLE_SITE_VERIFICATION,
+        },
+      }
     : {}),
+
   openGraph: {
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
+    title: "Ahmad Raza | Software Engineer & Digital Solutions",
+    description:
+      "Web development, mobile apps, AI solutions, custom software, SEO, and UI/UX services by Ahmad Raza.",
     url: SITE_URL,
     siteName: "Ahmad Raza",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Ahmad Raza — Software Engineer",
+      },
+    ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
+    title: "Ahmad Raza | Software Engineer & Digital Solutions",
+    description:
+      "Web development, mobile apps, AI solutions, custom software, SEO, and UI/UX services by Ahmad Raza.",
+    images: ["/og-image.png"],
   },
 };
 
@@ -93,35 +121,82 @@ const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Ahmad Raza",
-  jobTitle: "Full-Stack Developer",
+  jobTitle: "Software Engineer",
   url: SITE_URL,
   email: `mailto:${CONTACT_EMAIL}`,
-  sameAs: [GITHUB_URL, LINKEDIN_URL],
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Faisalabad",
-    addressRegion: "Punjab",
-    addressCountry: "PK",
-  },
+  sameAs: [
+    GITHUB_URL,
+    LINKEDIN_URL,
+  ],
   knowsAbout: [
+    "Web Development",
+    "Software Engineering",
+    "Mobile App Development",
+    "Artificial Intelligence",
+    "AI Integration",
+    "SEO",
+    "UI/UX Design",
     "React",
     "Next.js",
     "TypeScript",
     "Node.js",
     "MongoDB",
     "PostgreSQL",
-    "SaaS Development",
   ],
+};
+
+// ProfessionalService schema — ties the "buildbyraza" brand to the six
+// service pages and the areas served, so Google can connect the entity to
+// its offerings rather than treating each service page in isolation.
+const professionalServiceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "buildbyraza",
+  alternateName: "Ahmad Raza — Software Engineer",
+  url: SITE_URL,
+  email: `mailto:${CONTACT_EMAIL}`,
+  image: `${SITE_URL}/og-image.png`,
+  priceRange: "$$",
+  founder: { "@type": "Person", name: "Ahmad Raza" },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Faisalabad",
+    addressRegion: "Punjab",
+    addressCountry: "PK",
+  },
+  areaServed: [
+    { "@type": "Country", name: "Pakistan" },
+    { "@type": "Place", name: "Worldwide" },
+  ],
+  sameAs: [GITHUB_URL, LINKEDIN_URL],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Software engineering services",
+    itemListElement: SERVICE_PAGES.map((s) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: s.name,
+        description: s.seoDescription,
+        url: `${SITE_URL}/services/${s.slug}`,
+      },
+    })),
+  },
 };
 
 // WebSite schema — lets Google associate the domain with the brand/name.
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: SITE_NAME,
+  name: "Ahmad Raza",
+  alternateName: "buildbyraza",
   url: SITE_URL,
   inLanguage: "en",
-  publisher: { "@type": "Person", name: "Ahmad Raza", url: SITE_URL },
+  publisher: {
+    "@type": "Person",
+    name: "Ahmad Raza",
+    url: SITE_URL,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -149,6 +224,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceJsonLd) }}
         />
         <script
           type="application/ld+json"

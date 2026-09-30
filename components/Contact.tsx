@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import SectionBadge from "./SectionBadge";
 import QuoteButton from "./QuoteButton";
 import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
@@ -29,7 +30,6 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [confirmed, setConfirmed] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,10 +49,6 @@ export default function Contact() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!confirmed) {
-      setError("Please confirm the information provided is accurate.");
-      return;
-    }
     setSending(true);
     setError(null);
     try {
@@ -116,14 +112,16 @@ export default function Contact() {
                 "radial-gradient(120% 90% at 60% 35%, rgba(36,66,74,0.75) 0%, rgba(21,36,47,0) 55%), linear-gradient(180deg, #15242f 0%, #16283190 40%, #15242f 100%)",
             }}
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* next/image so this decorative banner is served resized + as AVIF/WebP
+              instead of the full-size source PNG */}
+          <Image
             src={BANNER_IMG}
             alt=""
             aria-hidden="true"
-            loading="lazy"
+            fill
+            sizes="320px"
             draggable={false}
-            className="absolute inset-0 w-full h-full object-cover object-top"
+            className="object-cover object-top"
           />
           <span
             aria-hidden="true"
@@ -272,15 +270,6 @@ export default function Contact() {
                 required
                 className={`${fieldCls} resize-none`}
               />
-              <label className="inline-flex items-start gap-[10px] text-[13px] text-text-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={confirmed}
-                  onChange={(e) => setConfirmed(e.target.checked)}
-                  className="mt-[3px] w-4 h-4 accent-[var(--gold)] cursor-pointer shrink-0"
-                />
-                I confirm the information provided is accurate.
-              </label>
               {error && (
                 <p className="text-[14px] leading-[1.5] m-0 text-red-600" role="alert">
                   {error}

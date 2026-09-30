@@ -6,7 +6,7 @@ import QuoteButton from "./QuoteButton";
 
 // TODO(placeholder): swap for a final branded section background.
 const SECTION_BG =
-  "https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=1600&q=60";
+  "https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=1000&q=45&fm=webp";
 
 const FAQS: { q: string; a: string }[] = [
   {

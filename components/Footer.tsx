@@ -8,26 +8,27 @@ import {
   GITHUB_URL,
   LINKEDIN_URL,
 } from "@/lib/site";
+import { SERVICE_PAGES } from "@/lib/services-content";
 
 // TODO(placeholder): swap this for the final branded background image.
 // CSS background-image (not next/image) so it needs no remotePatterns config
 // and stays easy to replace later — just change this URL.
 const BG_IMAGE =
-  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=60";
+  "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=45&fm=webp";
 
 const quickLinks = [
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
-  { label: "Services", href: "/#services" },
+  { label: "All Services", href: "/services" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/#contact" },
 ];
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Selected Work", href: "/work" },
-  { label: "The Blog", href: "/blog" },
-];
+// Service pages — the site's main commercial landing pages.
+const serviceLinks = SERVICE_PAGES.map((s) => ({
+  label: s.name,
+  href: `/services/${s.slug}`,
+}));
 
 export default function Footer() {
   return (
@@ -90,15 +91,15 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* Navigation */}
-          <nav data-reveal="" aria-label="Navigation">
+          {/* Services */}
+          <nav data-reveal="" aria-label="Services">
             <h4
               className="font-heading font-bold text-[19px] m-0 mb-6"
             >
-              Navigation
+              Services
             </h4>
             <ul className="list-none p-0 m-0 flex flex-col gap-[14px]">
-              {navLinks.map((l) => (
+              {serviceLinks.map((l) => (
                 <li key={l.label}>
                   <FooterLink href={l.href}>{l.label}</FooterLink>
                 </li>

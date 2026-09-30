@@ -3,9 +3,7 @@
 import { useRef, useState } from "react";
 import QuoteButton from "./QuoteButton";
 import SectionBadge from "./SectionBadge";
-
-const VIDEO_SRC =
-  "https://lljgmcbhflfroeofxrag.supabase.co/storage/v1/object/public/Intro%20Video/Ahmad%20Intro%20video.mp4";
+import { INTRO_VIDEO_SRC as VIDEO_SRC } from "@/lib/media";
 
 export default function AboutShort() {
   const mainRef = useRef<HTMLVideoElement>(null);

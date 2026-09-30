@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { VALUES, TIMELINE, SKILL_GROUPS } from "@/lib/data";
+import { INTRO_VIDEO_SRC } from "@/lib/media";
 
 export default function AboutPage() {
   const scrollContact = () => {
@@ -22,17 +23,36 @@ export default function AboutPage() {
         <h1 className="font-heading font-normal leading-[.98] tracking-[-.02em] m-0 mb-6 max-w-[760px] text-[clamp(44px,7vw,96px)]">
           Hi, I&apos;m <span className="italic text-gold">Ahmad.</span>
         </h1>
-        <p className="leading-[1.65] text-text-2 m-0 mb-5 text-[clamp(17px,1.6vw,21px)]">
-          I&apos;m a full-stack developer from Faisalabad, Pakistan. I learned web
-          development during my CS degree at GCUF, did SMIT&apos;s one-year MERN course
-          alongside it, and I&apos;ve been building for real clients since 2025: SaaS,
-          e-commerce, healthcare and education projects.
-        </p>
-        <p className="leading-[1.65] text-text-2 m-0 text-[clamp(17px,1.6vw,21px)]">
-          I handle everything technical myself, from the database to what you see on
-          screen. I like keeping things simple, giving straight answers about time and
-          cost, and shipping something usable early instead of something perfect late.
-        </p>
+        <div className=" ">
+          <p className="leading-[1.7] text-text-2 m-0 mb-5 text-[clamp(17px,1.6vw,21px)]">
+            I&apos;m a software engineer focused on building modern digital
+            products that are useful, reliable, and easy to use.
+          </p>
+          <p className="leading-[1.7] text-text-2 m-0 mb-5 text-[clamp(16px,1.5vw,19px)]">
+            I work on websites, web applications, mobile apps, AI-powered solutions,
+            custom software, and digital experiences for businesses, startups, and
+            individuals. I enjoy taking an idea from the early planning stage and
+            turning it into something people can actually use. Whether it&apos;s a
+            business website, a web application, an internal system, or a custom
+            digital product, I focus on understanding the purpose behind it before
+            deciding how to build it.
+          </p>
+          <p className="leading-[1.7] text-text-2 m-0 mb-5 text-[clamp(16px,1.5vw,19px)]">
+            My work covers the complete development process, including planning,
+            architecture, development, database integration, APIs, frontend interfaces,
+            testing, deployment, and ongoing improvements. I choose technologies based
+            on what the project actually needs rather than adding complexity just for
+            the sake of it.
+          </p>
+          <p className="leading-[1.7] text-text-2 m-0 mb-5 text-[clamp(16px,1.5vw,19px)]">
+            I also believe that good development is about more than writing code. Clear
+            communication, realistic timelines, thoughtful decisions, and understanding
+            the client&apos;s goals are just as important. I like keeping the process
+            straightforward, explaining technical things in simple terms, and making
+            sure there is a clear direction throughout the project.
+          </p>
+          
+        </div>
       </div>
 
       {/* intro video */}
@@ -40,18 +60,34 @@ export default function AboutPage() {
         <h2 className="font-mono text-[13px] tracking-[.18em] uppercase text-accent m-0 mb-[30px] text-center">
           A quick intro
         </h2>
-        <div className="mx-auto max-w-[900px]">
+        {/* Same intro video as the home page. The source is portrait, so a
+            blurred, scaled copy fills the 16/9 frame behind it on desktop —
+            matching the AboutShort treatment instead of cropping the subject. */}
+        <div className="mx-auto max-w-[400px] md:max-w-[900px]">
           <div
-            className="relative rounded-[18px] overflow-hidden border border-border bg-soft"
-            style={{ aspectRatio: "16/9" }}
+            className="relative rounded-[18px] overflow-hidden border border-border aspect-[9/16] md:aspect-[16/9]"
+            style={{ background: "#0a0a0a" }}
           >
             <video
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover hidden md:block"
+              style={{ filter: "blur(28px) brightness(0.6) saturate(1.2)", transform: "scale(1.15)" }}
+              muted
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <source src={INTRO_VIDEO_SRC} type="video/mp4" />
+            </video>
+
+            <video
+              className="absolute inset-0 w-full h-full object-cover md:object-contain md:left-1/2 md:-translate-x-1/2 md:h-full md:w-auto"
+              style={{ zIndex: 1 }}
               controls
               preload="metadata"
               playsInline
             >
-              <source src="/intro.mp4" type="video/mp4" />
+              <source src={INTRO_VIDEO_SRC} type="video/mp4" />
               Your browser doesn&apos;t support embedded video.
             </video>
           </div>

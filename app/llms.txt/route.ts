@@ -1,5 +1,6 @@
 import { getAllProjects } from "@/lib/projects";
 import { getPublishedPosts } from "@/lib/blog";
+import { SERVICE_PAGES } from "@/lib/services-content";
 import {
   SITE_URL,
   SITE_NAME,
@@ -23,6 +24,10 @@ export async function GET() {
     .map((p) => `- [${p.title}](${SITE_URL}/work/${p.slug}): ${p.blurb}`)
     .join("\n");
 
+  const serviceLines = SERVICE_PAGES.map(
+    (s) => `- [${s.name}](${SITE_URL}/services/${s.slug}): ${s.seoDescription}`
+  ).join("\n");
+
   const postLines =
     posts.length > 0
       ? posts
@@ -40,9 +45,14 @@ building production web apps end to end with React, Next.js, Node and TypeScript
 ## Key pages
 
 - [Home](${SITE_URL}/): Overview, services, skills, featured work and contact.
+- [Services](${SITE_URL}/services): All services offered, with a dedicated page for each.
 - [Work](${SITE_URL}/work): Selected projects and case studies.
 - [Blog](${SITE_URL}/blog): Articles on web development, craft and performance.
 - [About](${SITE_URL}/about): Background, values and timeline.
+
+## Services
+
+${serviceLines}
 
 ## Work / case studies
 

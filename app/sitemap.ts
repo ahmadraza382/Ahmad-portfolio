@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllProjects } from "@/lib/projects";
 import { getPublishedPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/site";
+import { SERVICE_SLUGS } from "@/lib/services-content";
 
 export const revalidate = 300;
 
@@ -26,8 +27,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
+  // Service pages — high priority: these are the main commercial landing pages.
+  const serviceUrls: MetadataRoute.Sitemap = SERVICE_SLUGS.map((slug) => ({
+    url: `${SITE_URL}/services/${slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.9,
+  }));
+
   return [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE_URL}/services`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    ...serviceUrls,
     { url: `${SITE_URL}/work`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },

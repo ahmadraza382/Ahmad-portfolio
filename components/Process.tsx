@@ -3,7 +3,7 @@ import QuoteButton from "./QuoteButton";
 
 // TODO(placeholder): swap for a final branded section background.
 const SECTION_BG =
-  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=60";
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1000&q=45&fm=webp";
 
 // TODO(placeholder): swap step images for real ones.
 const STEPS: { no: string; title: string; desc: string; img: string; icon: React.ReactNode }[] = [
@@ -11,42 +11,42 @@ const STEPS: { no: string; title: string; desc: string; img: string; icon: React
     no: "01.",
     title: "Requirements Planning",
     desc: "We discuss your idea, goals and budget, and turn them into a clear, agreed scope.",
-    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconClipboard />,
   },
   {
     no: "02.",
     title: "Design",
     desc: "Wireframes and UI designs so you see exactly how it will look before any code.",
-    img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconPen />,
   },
   {
     no: "03.",
     title: "Development",
     desc: "Frontend and backend built in small, reviewable milestones you can follow.",
-    img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconCode />,
   },
   {
     no: "04.",
     title: "Testing",
     desc: "Every feature tested across devices and edge cases before it ships.",
-    img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconCheck />,
   },
   {
     no: "05.",
     title: "Deployment",
     desc: "Launch on production infrastructure: domain, hosting, SSL and analytics set up.",
-    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconRocket />,
   },
   {
     no: "06.",
     title: "Maintenance",
     desc: "Ongoing support, fixes and improvements so the product keeps earning.",
-    img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=500&q=60",
+    img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=460&q=55&fm=webp",
     icon: <IconWrench />,
   },
 ];
